@@ -7,12 +7,11 @@ function output = KeyResponse(type, valid_indices, varargin)
 %     are passed manually. (How to specify the order though??)
 
 if nargin < 2 % check for too few inputs
-    error('');
+    error('Too few inputs to KeyResponse().');
 end
 
-if (~exist('var1', 'var'))
-    var1 = true;
-end
+opts = struct('firstparameter', 1, 'secondparameter', magic(3));
+opts = CheckInputs(opts, varargin{:}); % this pattern ought to be pretty constant
 
 
 
