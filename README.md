@@ -5,7 +5,7 @@ MATLAB on any system should be fine.
 
 ## Install On Ubuntu With Octave/PTB-3
 
-To get the most recent version of Octave (4.0.1), use (adapted from [here](http://askubuntu.com/questions/645600/how-to-install-octave-4-0-0-in-ubuntu-14-04):
+To get the most recent version of Octave (4.0.1), use (adapted from [here](http://askubuntu.com/questions/645600/how-to-install-octave-4-0-0-in-ubuntu-14-04)):
 
 ```
 sudo apt-get build-dep octave
@@ -42,3 +42,4 @@ These steps take a fair amount of time, so plan ahead!
 
 Should be the same as above, except sub in MATLAB installation for Octave installation.
 Will add more once I've tried it for myself.
+
