@@ -38,20 +38,14 @@ classdef KeyFeedback
             end
         end % end constructor
         
-        function DrawOutline(obj, scrn)
-            if ~isa(scrn, 'PsychScreen') 
-                error('Wrong class')
-            end
-            Screen('FrameRect', scrn.window,...
+        function DrawOutline(obj, window)
+            Screen('FrameRect', window,...
                    obj.outline_colour, obj.rect_locs);
         end
         
-        function DrawFill(obj, scrn, colour, indices)
-            if ~isa(scrn, 'PsychScreen')
-                error('Wrong class')
-            end
+        function DrawFill(obj, window, colour, indices)
             which_colour = getfield(obj, colour);
-            Screen('FillRect', scrn.window,...
+            Screen('FillRect', window,...
                    which_colour, obj.rect_locs(:, find(indices > 0)));
         end
     end % end methods
