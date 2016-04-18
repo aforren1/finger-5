@@ -31,9 +31,17 @@ classdef PsychAudio
         end % end constructor
         
         function FillAudio(obj, file_path, idx)
+        % obj is the object of PsychAudio class 
+        % file_path is the complete path to the audio file
+        % idx is the index of the slave to fill
             snd = obj.soundfun(file_path); % read sound w/ wavread or audioread
-            PsychPortAudio('CreateBuffer', idx, temp);
-            PsychPortAudio('FillBuffer', idx, temp);
+            snd = snd';
+            % looking for a 2xn matrix, duplicate channel if mono
+            if size(snd, 1) < 2
+                snd = [snd; snd];
+            end
+            PsychPortAudio('CreateBuffer', idx, snd);
+            PsychPortAudio('FillBuffer', idx, snd);
         end
         
         function PlayAudio(obj, idx, time)
@@ -44,7 +52,7 @@ classdef PsychAudio
             PsychPortAudio('Stop', idx);
         end
         
-        function CloseAudio()
+        function CloseAudio(obj)
             PsychPortAudio('Close');
         end
     
