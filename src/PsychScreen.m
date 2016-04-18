@@ -6,7 +6,7 @@ classdef PsychScreen
         red;
         green;
         blue;
-        reversed;
+        reversed; % reversed == true == white background
         background_colour;
         text_colour;
         center_x;
@@ -15,10 +15,9 @@ classdef PsychScreen
         dims; % dimensions of the window
         priority; % highest priority possible for screen
         ifi; % interflip interval
-    end
+    end % end properties
     
-    methods
-    
+    methods    
         function obj = PsychScreen(varargin)
         % Additional settings are `big_screen` and `skip_tests`
             AssertOpenGL;
@@ -71,13 +70,13 @@ classdef PsychScreen
             obj.priority = MaxPriority(obj.window);
             obj.ifi = Screen('GetFlipInterval', obj.window);
             
-        end
+        end % end PsychScreen
         
         function CloseScreen(obj)
         % Closes and removes the PsychScreen object
             sca;
             clear obj;
-        end
+        end % end CloseScreen
   
-    end
-end    
+    end % end methods
+end % end classdef   
