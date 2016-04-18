@@ -25,7 +25,7 @@ classdef KeyFeedback
             obj.green = opts.green;
             obj.blue = opts.blue;
             
-            spacing = linspace(0.2, 0.8, obj.n_boxes);
+            spacing = linspace(0.15, 0.85, obj.n_boxes);
             rect_area = (spacing(2) - spacing(1))/2;
             base_rect = rect_area * [0 0 dims_x dims_x];
             xrectpos = spacing * dims_x;
@@ -43,10 +43,18 @@ classdef KeyFeedback
                    obj.outline_colour, obj.rect_locs);
         end
         
-        function DrawFill(obj, window, colour, indices)
+        function DrawFill(obj, window, colour, indices, scale)
+        % obj is of KeyFeedback class 
+        % window is scrn.window
+        % colour is a string (eg. 'red', 'blue', 'green')
+        % indices is a misnomer, usually of the form [0 1 0 .5]
+        % scale is a fixed amount to scale the squares by
             which_colour = getfield(obj, colour);
-            Screen('FillRect', window,...
-                   which_colour, obj.rect_locs(:, find(indices > 0)));
+            box_rescale = [1; 1; -1; -1] * ...
+                    (obj.rect_locs(3,1) - obj.rect_locs(1,1))*scale);
+                    
+            Screen('FillRect', window, which_colour, ...
+                   obj.rect_locs(:, find(indices > 0)) + box_rescale);
         end
     end % end methods
 end % end classdef

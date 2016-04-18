@@ -8,6 +8,7 @@ MATLAB on any system should be fine.
 To get the most recent version of Octave (4.0.1), use (adapted from [here](http://askubuntu.com/questions/645600/how-to-install-octave-4-0-0-in-ubuntu-14-04)):
 
 ```
+sudo apt-get install libportaudio-dev
 sudo apt-get build-dep octave
 wget ftp://ftp.gnu.org/gnu/octave/octave-4.0.1.tar.gz
 tar xf octave-4.0.1.tar.gz

@@ -73,9 +73,8 @@ classdef PsychScreen
         end % end PsychScreen
         
         function CloseScreen(obj)
-        % Closes and removes the PsychScreen object
+        % Closes the PsychScreen object
             sca;
-            clear obj;
         end % end CloseScreen
   
     end % end methods
