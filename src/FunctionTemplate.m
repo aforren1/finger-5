@@ -11,6 +11,7 @@ function output = FunctionTemplate(req, varargin)
     
     % add function handles
     output.f.GetReq = @GetReq;
+    class()
 end
 
 function output = GetReq(obj)
