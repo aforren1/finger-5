@@ -3,7 +3,7 @@
 This is only guaranteed on Ubuntu 14.04 LTS with Octave 4.0.1, but 
 MATLAB on any system should be fine.
 
-## Install On Ubuntu With Octave/PTB-3
+### Install On Ubuntu With Octave/PTB-3
 
 To get the most recent version of Octave (4.0.1), use (adapted from [here](http://askubuntu.com/questions/645600/how-to-install-octave-4-0-0-in-ubuntu-14-04)):
 
