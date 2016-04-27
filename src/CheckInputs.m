@@ -6,8 +6,8 @@ function opts = CheckInputs(opts, varargin)
 opt_names = fieldnames(opts);
 
 %# count arguments
-n_args = length(varargin);
-if round(n_args/2) ~= n_args/2
+num_args = length(varargin);
+if round(num_args/2) ~= num_args/2
    error('FUNCTION needs propertyName/propertyValue pairs')
 end
 
