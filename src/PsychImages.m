@@ -19,7 +19,9 @@ classdef PsychImages
         end
         
         function obj = ImportImages(obj, file_path, idx, scrn_handle, scrn_dims_x)
-            
+            if exist('OCTAVE_VERSION', 'builtin') ~= 0
+                pkg load image % make sure we have imresize
+            end
             obj.raw_images{idx} = imread(file_path);
             tempimg = imresize(obj.raw_images{idx},...
                                [obj.scale*scrn_dims_x NaN]);
