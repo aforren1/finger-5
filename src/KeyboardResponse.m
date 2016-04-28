@@ -27,6 +27,14 @@ classdef KeyboardResponse
             KbQueueCreate(-1, keys);   
         end      
         
+        function StartKeyResponse(obj)
+            KbQueueStart;
+        end
+        
+        function StopKeyResponse(obj)
+            KbQueueStop;
+        end
+        
         function DeleteKeyResponse(obj)
             try 
                 KbQueueRelease;
@@ -34,5 +42,32 @@ classdef KeyboardResponse
                 warning('Not using the keyboard')
             end
         end
-    end
-end
+        
+        function [new_press, updated_screen_press] = CheckKeyResponse(obj, updated_screen_press)
+        
+            [~, pressed, released] = KbQueueCheck;
+            if any(pressed > 0)
+                press_key = KbName(find(pressed > 0));
+                if iscell(press_key)
+                    press_key = cell2mat(press_key);
+                end
+                
+                new_screen_press = ismember(obj.valid_keys, press_key); % for updated feedback
+                updated_screen_press = updated_screen_press + new_screen_press;
+                press_index = find(new_screen_press);
+                time_press = min(pressed(pressed > 0));
+                new_press = [press_index, time_press];
+                KbQueueFlush;
+            else % no new presses
+                new_press = [NaN, NaN];
+            end
+            
+            if any(released > 0) % figure out if any keys have been released in the frame
+                release_key = KbName(find(released > 0));
+                new_screen_release = ismember(obj.valid_keys, release_key);
+                updated_screen_press = updated_screen_press - new_screen_release;           
+            end          
+        end % end CheckKeyResponse
+        
+    end % end methods
+end % end classdef
