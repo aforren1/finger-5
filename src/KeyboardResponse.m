@@ -22,6 +22,8 @@ classdef KeyboardResponse
             obj.force_min = opts.force_min;
             obj.force_max = opts.force_max;
             obj.valid_keys = opts.possible_keys(valid_indices);
+            obj.valid_indices = valid_indices;
+            
             keys = zeros(1, 256);
             keys(KbName(obj.valid_keys)) = 1;
             KbQueueCreate(-1, keys);   
