@@ -52,21 +52,44 @@ classdef ForceResponse
             
             obj.zero_baseline = zeros(1, length(valid_indices));
             calibration = load(fullfile('misc/calibration/cfB_2012_08_24_regress.mat'));
-            dev.volt_2_newts = calibration.Volts2N(valid_indices);
+            obj.volt_2_newts = calibration.Volts2N(valid_indices);
         end
         
         function StartKeyResponse(obj)
+            stop(obj.daq);
+            start(obj.daq);
+            trigger(obj.daq);
         end
         
         function StopKeyResponse(obj)
+            stop(obj.daq);
         end
         
-        function DeleteKeyResponse(obj)
+        function obj = DeleteKeyResponse(obj)
+            delete(obj.daq);
+            obj = [];
         end
         
         function [new_press, updated_screen_press] = CheckKeyResponse(obj, updated_screen_press)
+            while(isempty(new_screen_press))
+                new_screen_press = getsample(obj.daq);
+            end
+            % rescale output
+            new_screen_press = new_screen_press - obj.zero_baseline;
+            new_screen_press = new_screen_press .* obj.volt_2_newts;
+            new_screen_press_scaled = new_screen_press / obj.force_min;
+            % make sure to check n and n-1 conditions
+            if any(new_screen_press_scaled >= 1) % there's been a press
+            
+            end
+            
         end
         
+        % todo: rename to something better
+        function output = CheckFullKeyResponse(obj)
+        
+        
+        end
     end % end methods
     
 end % end classdef

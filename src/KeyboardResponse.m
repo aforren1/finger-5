@@ -37,9 +37,10 @@ classdef KeyboardResponse
             KbQueueStop;
         end
         
-        function DeleteKeyResponse(obj)
+        function obj = DeleteKeyResponse(obj)
             try 
                 KbQueueRelease;
+                obj = [];
             catch
                 warning('Not using the keyboard')
             end
