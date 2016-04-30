@@ -46,7 +46,7 @@ classdef KeyboardResponse
             end
         end
         
-        function [new_press, updated_screen_press] = CheckKeyResponse(obj, updated_screen_press)
+        function [new_press, updated_screen_press] = CheckKeyResponse(obj, updated_screen_press, previous_state)
         
             [~, pressed, released] = KbQueueCheck;
             if any(pressed > 0)
@@ -60,7 +60,6 @@ classdef KeyboardResponse
                 press_index = find(new_screen_press);
                 time_press = min(pressed(pressed > 0));
                 new_press = [press_index, time_press];
-                KbQueueFlush;
             else % no new presses
                 new_press = [NaN, NaN];
             end
@@ -68,8 +67,14 @@ classdef KeyboardResponse
             if any(released > 0) % figure out if any keys have been released in the frame
                 release_key = KbName(find(released > 0));
                 new_screen_release = ismember(obj.valid_keys, release_key);
-                updated_screen_press = updated_screen_press - new_screen_release;           
-            end          
+                updated_screen_press = updated_screen_press - new_screen_release;
+                release_index = find(new_screen_release);
+                time_release = min(released(released > 0));
+                new_release = [release_index, time_release];
+            else
+                new_release = [NaN, NaN];       
+            end   
+            KbQueueFlush;       
         end % end CheckKeyResponse
         
     end % end methods
