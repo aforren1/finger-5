@@ -91,9 +91,17 @@ classdef ForceResponse
         end
         
         % todo: rename to something better
-        function output = CheckFullKeyResponse(obj)
+        function [force_traces, timestamp] = CheckFullResponse(obj)
         
-        
+            num_samples = get(obj.daq, 'SamplesAvailable');
+            if num_samples > 0
+                [force_traces, timestamp] = getdata(obj.daq, num_samples);
+                for ii = 1:size(force_traces, 1)
+                    force_traces(ii, :) = (force_traces(ii, :) - obj.zero_baseline).*obj.volts_2_newts;
+                end
+            else
+                error('Bad reading from board!')
+            end     
         end
     end % end methods
     
