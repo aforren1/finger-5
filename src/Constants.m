@@ -7,5 +7,4 @@ function consts = Constants()
     consts.reversed = false;
     consts.big_screen = false;
     consts.skip_tests = true;
-
 end

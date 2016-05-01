@@ -72,9 +72,10 @@ classdef PsychScreen
             
         end % end PsychScreen
         
-        function CloseScreen(obj)
+        function obj = CloseScreen(obj)
         % Closes the PsychScreen object
             sca;
+            obj = [];
         end % end CloseScreen
   
     end % end methods
