@@ -25,7 +25,7 @@ classdef KeyFeedback
             obj.green = opts.green;
             obj.blue = opts.blue;
             
-            spacing = linspace(0.15, 0.85, obj.num_boxes);
+            spacing = linspace(0.18, 0.82, obj.num_boxes);
             rect_area = (spacing(2) - spacing(1))/2;
             base_rect = rect_area * [0 0 dims_x dims_x];
             xrectpos = spacing * dims_x;
@@ -48,7 +48,7 @@ classdef KeyFeedback
         % window is scrn.window
         % colour is a string (eg. 'red', 'blue', 'green')
         % indices is a misnomer, usually of the form [0 1 0 .5]
-        % scale is a fixed amount to scale the squares by
+        % scale is a fixed amount to scale the squares by (0 being no change, .5 being 50% smaller)
             which_colour = getfield(obj, colour);
             box_rescale = [1; 1; -1; -1] * ...
                     (obj.rect_locs(3,1) - obj.rect_locs(1,1))*scale;
