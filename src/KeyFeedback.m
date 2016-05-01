@@ -1,6 +1,6 @@
 classdef KeyFeedback
     properties
-        n_boxes;
+        num_boxes;
         outline_colour;
         correct_colour;
         incorrect_colour;
@@ -13,25 +13,25 @@ classdef KeyFeedback
     methods
         function obj = KeyFeedback(dims_x, dims_y, varargin)
         
-            opts = struct('n_boxes', 4,...
+            opts = struct('num_boxes', 4,...
                           'reversed', false,...
                           'red', [255, 30, 63],...
                           'green', [97, 255, 77],...
                           'blue', [85, 98, 255]);
             opts = CheckInputs(opts, varargin{:});
-            obj.n_boxes = opts.n_boxes;
+            obj.num_boxes = opts.num_boxes;
             obj.outline_colour = ifelse(opts.reversed, [0 0 0], [255 255 255]);
             obj.red = opts.red;
             obj.green = opts.green;
             obj.blue = opts.blue;
             
-            spacing = linspace(0.15, 0.85, obj.n_boxes);
+            spacing = linspace(0.15, 0.85, obj.num_boxes);
             rect_area = (spacing(2) - spacing(1))/2;
             base_rect = rect_area * [0 0 dims_x dims_x];
             xrectpos = spacing * dims_x;
             yrectpos = 0.8 * dims_y * ones(1, length(spacing));
 
-            obj.rect_locs = nan(4, opts.n_boxes);
+            obj.rect_locs = nan(4, opts.num_boxes);
             for pp = 1:length(yrectpos)
                 obj.rect_locs(:,pp) = CenterRectOnPointd(base_rect,...
                 xrectpos(pp), yrectpos(pp));
@@ -51,7 +51,7 @@ classdef KeyFeedback
         % scale is a fixed amount to scale the squares by
             which_colour = getfield(obj, colour);
             box_rescale = [1; 1; -1; -1] * ...
-                    (obj.rect_locs(3,1) - obj.rect_locs(1,1))*scale);
+                    (obj.rect_locs(3,1) - obj.rect_locs(1,1))*scale;
                     
             Screen('FillRect', window, which_colour, ...
                    obj.rect_locs(:, find(indices > 0)) + box_rescale);

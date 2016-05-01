@@ -63,8 +63,9 @@ classdef PsychScreen
                                                  obj.background_colour,...
                                                  [200 200 600 600]);
             end
-           
-            [obj.center_x, obj.center_y] = RectCenter(obj.dims); 
+            
+            [obj.center_x, obj.center_y] = RectCenter(obj.dims);
+            obj.dims = obj.dims(3:4);
             Screen('BlendFunction', obj.window, ...
                    'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
             obj.priority = MaxPriority(obj.window);
