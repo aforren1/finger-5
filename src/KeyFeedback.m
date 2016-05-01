@@ -52,9 +52,13 @@ classdef KeyFeedback
             which_colour = getfield(obj, colour);
             box_rescale = [1; 1; -1; -1] * ...
                     (obj.rect_locs(3,1) - obj.rect_locs(1,1))*scale;
-                    
-            Screen('FillRect', window, which_colour, ...
-                   obj.rect_locs(:, find(indices > 0)) + box_rescale);
+            try
+                Screen('FillRect', window, which_colour, ...
+                       obj.rect_locs(:, find(indices > 0)) + box_rescale);
+            catch
+                % too small, don't draw anything
+            end
+            
         end
     end % end methods
 end % end classdef
