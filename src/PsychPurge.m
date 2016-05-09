@@ -7,11 +7,11 @@ function PsychPurge()
     sca;
     ShowCursor;
     try KbQueueRelease
-    catch err
+    catch
         warning('Not using the keyboard')
     end
     try PsychPortAudio('Close')
-    catch err
+    catch
         warning('No active audio device')
     end
 
