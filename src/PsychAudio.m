@@ -15,6 +15,8 @@ classdef PsychAudio
             InitializePsychSound(1);
             
             % set sound reading function
+            % octave classes and function handles are weird for now, so wait
+            % until FillAudio to figure out the *actual* function
             if (exist('OCTAVE_VERSION', 'builtin') || verLessThan('matlab', '8'))
                 obj.which_audio_fun = 'wavread';
             else
@@ -30,17 +32,17 @@ classdef PsychAudio
             end
         end % end constructor
         
-        function FillAudio(obj, file_or_matrix, idx)
+        function FillAudio(obj, file_or_matrix, aud_index)
         % obj is the object of PsychAudio class 
         % file_or_matrix is the complete path to the audio file (or an existing matrix)
-        % idx is the index of the slave to fill
+        % aud_index is the index of the slave to fill
             if ischar(file_or_matrix)
                 if strcmpi(obj.which_audio_fun, 'wavread')
                     audio_fun = @wavread;
                 elseif strcmpi(obj.which_audio_fun,  'audioread')
                     audio_fun = @audioread;
                 else
-                    error('No good audio reading')
+                    error('No good audio reading function (??)')
                 end
                 snd = audio_fun(file_or_matrix); % read sound w/ wavread or audioread
             elseif ismatrix(file_or_matrix)
@@ -55,16 +57,16 @@ classdef PsychAudio
             if size(snd, 1) < 2
                 snd = [snd; snd];
             end
-            PsychPortAudio('CreateBuffer', idx, snd);
-            PsychPortAudio('FillBuffer', idx, snd);
+            PsychPortAudio('CreateBuffer', aud_index, snd);
+            PsychPortAudio('FillBuffer', aud_index, snd);
         end
         
-        function PlayAudio(obj, idx, time)
-            PsychPortAudio('Start', idx, 1, time, 0);
+        function PlayAudio(obj, aud_index, time)
+            PsychPortAudio('Start', aud_index, 1, time, 0);
         end
         
-        function StopAudio(obj, idx)
-            PsychPortAudio('Stop', idx);
+        function StopAudio(obj, aud_index)
+            PsychPortAudio('Stop', aud_index);
         end
         
         function CloseAudio(obj)
