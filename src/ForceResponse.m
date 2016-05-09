@@ -80,8 +80,8 @@ classdef ForceResponse
             new_screen_press = new_screen_press .* obj.volt_2_newts;
             new_screen_press_scaled = new_screen_press / obj.force_min;
             % bound the screen press 
-            update_screen_press(update_screen_press > 1) = 1;
-            update_screen_press(update_screen_press < 0) = 0;
+            update_screen_press(update_screen_press >= 1) = 1;
+            update_screen_press(update_screen_press < 1) = 0;
             % make sure to check n and n-1 conditions
             delta_press = updated_screen_press - previous_state;
             press_index = find(delta_press == 1);

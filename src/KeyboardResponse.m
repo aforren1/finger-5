@@ -40,10 +40,10 @@ classdef KeyboardResponse
         function obj = DeleteKeyResponse(obj)
             try 
                 KbQueueRelease;
-                obj = [];
             catch
                 warning('Not using the keyboard')
             end
+            obj = [];
         end
         
         function [new_press, updated_screen_press] = CheckKeyResponse(obj, updated_screen_press)
