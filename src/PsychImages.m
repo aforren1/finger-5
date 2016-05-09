@@ -18,18 +18,23 @@ classdef PsychImages
             obj.ptb_images = nan(1, n_images);
         end
         
-        function obj = ImportImages(obj, file_path, idx, scrn_handle, scrn_dims_x)
+        function obj = ImportImages(obj, file_path, img_index, scrn_handle, scrn_dims_x)
             if exist('OCTAVE_VERSION', 'builtin') ~= 0
                 pkg load image % make sure we have imresize
             end
-            obj.raw_images{idx} = imread(file_path);
-            tempimg = imresize(obj.raw_images{idx},...
+            obj.raw_images{img_index} = imread(file_path);
+            tempimg = imresize(obj.raw_images{img_index},...
                                [obj.scale*scrn_dims_x NaN]);
             if ~obj.reversed
                 tempimg = imcomplement(tempimg);
             end
             
-            obj.ptb_images(idx) = Screen('MakeTexture', scrn_handle, tempimg);  
+            obj.ptb_images(img_index) = Screen('MakeTexture', scrn_handle, tempimg);  
         end
+        
+        function DrawImage(obj, img_index, scrn_handle)
+            Screen('DrawTexture', scrn_handle, obj.ptb_images(img_index));
+        end
+        
     end
 end
