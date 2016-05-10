@@ -18,7 +18,7 @@ classdef PsychImages
             obj.ptb_images = nan(1, n_images);
         end
         
-        function obj = ImportImages(obj, file_path, img_index, scrn_handle, scrn_dims_x)
+        function obj = ImportImage(obj, file_path, img_index, scrn_handle, scrn_dims_x)
             if exist('OCTAVE_VERSION', 'builtin') ~= 0
                 pkg load image % make sure we have imresize
             end
