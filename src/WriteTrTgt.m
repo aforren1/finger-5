@@ -38,7 +38,8 @@ function WriteTrTgt(day, block, swapped, image_type, repeats, easy_block)
     if catchind(end) > combo_size
         catchind(end) = combo_size;
     end
-    catch_trial = [-1 -1 -1 -1];
+    % finger, img_time, indices of two swapped images
+    catch_trial = [-1 -1 combos(1, 3:4)];
     combos = insertrows(combos, catch_trial, catchind);
     combo_size = size(combos, 1);
 

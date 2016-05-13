@@ -70,25 +70,36 @@ classdef ForceResponse
             obj = [];
         end
         
-        function [new_press, updated_screen_press] = CheckKeyResponse(obj, updated_screen_press, previous_state)
+        function [new_press, updated_screen_press] = CheckKeyResponse(obj, updated_screen_press)
             while(isempty(new_screen_press))
                 new_screen_press = getsample(obj.daq);
             end
             time_press = GetSecs;
+            time_release = time_press;
             % rescale output
             new_screen_press = new_screen_press - obj.zero_baseline;
             new_screen_press = new_screen_press .* obj.volt_2_newts;
             new_screen_press_scaled = new_screen_press / obj.force_min;
             % bound the screen press 
-            update_screen_press(update_screen_press >= 1) = 1;
-            update_screen_press(update_screen_press < 1) = 0;
+            new_screen_press_scaled(new_screen_press_scaled >= 1) = 1;
+            new_screen_press_scaled(new_screen_press_scaled < 1) = 0;
             % make sure to check n and n-1 conditions
-            delta_press = updated_screen_press - previous_state;
+            delta_press = new_screen_press_scaled - updated_screen_press;
+            
             press_index = find(delta_press == 1);
+            if isempty(press_index)
+                press_index = NaN;
+                time_press = NaN;
+            end
             release_index = find(delta_press == -1);
+            if isempty(release_index)
+                release_index = NaN;
+                time_release = NaN;
+            end
             
             new_press = [press_index, time_press];
-            new_release = [release_index, time_press];
+            new_release = [release_index, time_release];
+            updated_screen_press = new_screen_press_scaled;
             
         end
         

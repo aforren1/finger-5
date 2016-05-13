@@ -10,5 +10,9 @@ function out = ParseTgt(filename)
 % 
 % This will go on the backburner, because my current solution
 % involves `eval`ing the top
+%
+% Should data then be saved in a "long" format, or would something
+% like HDF5 or csvy (csv + YAML header) be more flexible? Then it's 
+% a matter of parsing the top vs bottom
 
 end
