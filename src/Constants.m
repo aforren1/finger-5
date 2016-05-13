@@ -1,4 +1,4 @@
-function consts = Constants()
+function consts = Constants
     consts.timing_tolerance = 0.075;
     consts.possible_keys =  {{'a','w','e','f','v','b','h','u','i','l'}};
     consts.force_min = 1;
@@ -7,4 +7,5 @@ function consts = Constants()
     consts.reversed = false;
     consts.big_screen = false;
     consts.skip_tests = true;
+	consts.scale = 0.22;
 end
