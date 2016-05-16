@@ -24,10 +24,11 @@ function output = main
     end
 
     if strfind(ui.tgt_name, 'tr_')
+	    % use timed response experiment
         FillAudio(aud, [aud_dir, 'beepTrainFast.wav'], 1);
         FillAudio(aud, [aud_dir, 'smw_coin.wav'], 2);
-        % use timed response experiment
     elseif strfind(ui.tgt_name, 'rt_')
+	    % use serial reaction time experiment
         FillAudio(aud, [aud_dir, 'beep.wav'], 1);
         aud_names = dir([aud_dir, 'orch*.wav']);
         for ii = 1:length(aud_names)
