@@ -1,12 +1,14 @@
-function WriteTrTgt(day, block, swapped, image_type, repeats, easy_block)
+function WriteTrTgt(day, block, swapped, image_type,...
+                    repeats, easy_block, out_path)
     % day is the day (int)
     % block is the block (int)
     % swapped is a 1x2 vector of the swapped indices, or 0 if no swap 
     % image_type is 0 (hands) or 1 (symbols)
     % repeats is the number of repetitions for the entire array
     % easy_block overrides the image presentation times with some low number (1 = true)
-
-    out_path = '~/Documents/BLAM/finger-5/misc/tfiles/'; % dirty
+    % copy-paste test:
+	% WriteTrTgt(1, 1, [7 9], 0, 3, 0, 'D:/blam/finger-5/misc/tfiles/');
+	
     seed = day * block;
     rand('seed', seed);
     ind_finger = [7 8 9 10];
@@ -52,7 +54,17 @@ function WriteTrTgt(day, block, swapped, image_type, repeats, easy_block)
                 repmat(swapped2, combo_size, 1) ...
                 repmat(image_type, combo_size, 1) combos];
                 
-    file_name = ['tr_','dy',num2str(day), '_bk', num2str(block),...
+    filename = ['tr_','dy',num2str(day), '_bk', num2str(block),...
                 '_sw', num2str(swapped2), '_sh', num2str(image_type), '.tgt']; 
-    dlmwrite([out_path, file_name], final_output, '\t', 'precision', 2);
+	headers = {'exp_day', 'block', 'trial', 'easy', ...
+               'swapped', 'image_type', 'finger_index', 'image_time', ...
+               'swap_index_1', 'swap_index_2'};			   
+	fid = fopen([out_path, filename], 'wt');
+	csvFun = @(str)sprintf('%s, ',str);
+	xchar = cellfun(csvFun, headers, 'UniformOutput', false);
+	xchar = strcat(xchar{:});
+	xchar = strcat(xchar(1:end-1), '\n');
+	fprintf(fid, xchar);
+	fclose(fid);
+    dlmwrite([out_path, filename], final_output, '-append');
 end              
