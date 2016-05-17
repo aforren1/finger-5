@@ -6,9 +6,9 @@ function out = ParseTgt(filename)
 	fclose(fid);
 
 	headers = textscan(headerline,'%s','Delimiter',',');
-
-	for k = 1:length(headers{:})
-	   eval(['out.' headers{1}{k} '= data(:,k);']);
+	headers = headers{1};
+	
+	for ii = 1:length(headers)
+	    out.(headers{ii}) = data(:, ii);
 	end
-
 end
