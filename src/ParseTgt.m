@@ -1,5 +1,6 @@
 function out = ParseTgt(filename)
-
+% filename must be the full (relative) path to the .tgt file 
+% also assumes comma-delimited
 	fid = fopen(filename, 'r');
 	headerline = fgetl(fid);
 	data = dlmread(filename, ',', 1, 0);

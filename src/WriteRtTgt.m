@@ -1,4 +1,4 @@
-function WriteRtTgt(day, block, swapped, image_type, repeats)
+function WriteRtTgt(day, block, swapped, image_type, repeats, out_path)
 
     % day is the day (integer)
     % block is the block number (int)
@@ -7,11 +7,12 @@ function WriteRtTgt(day, block, swapped, image_type, repeats)
     % image_type is 0 (hands) or 1 (shapes)
     % repeats is the number of repetitions for entire array
     % out_path is the output path
-    % filename is determined by args, eg. 'dy1_bk1_ez1_sw0_sh1.tgt' would be
+    % filename is determined by args, eg. 'dy1_bk1_sw0_sh1.tgt' would be
     % 'day 1, block 1, easy, no swaps, shapes'.
-    out_path = '~/Documents/BLAM/finger-5/misc/tfiles/'; % change for your comp!
+    % copy-paste test:
+    % WriteRtTgt(3, 2, [8 10], 0, 3, '~/Documents/BLAM/finger-5/misc/tfiles/')
+
     seed = day * block; % avoid explicit patterns in seeding
-    %rng(seed);
     rand('seed', seed);
     ind_finger = [7 8 9 10];
     ind_finger = repmat(ind_finger, 1, repeats);
@@ -37,8 +38,18 @@ function WriteRtTgt(day, block, swapped, image_type, repeats)
 
     file_name = ['rt_','dy',num2str(day), '_bk', num2str(block), ...
                 '_sw', num2str(swapped2), '_sh', num2str(image_type), '.tgt'];
-
-    dlmwrite([out_path, file_name], final_output, '\t');
+    headers = {'day', 'block', 'trial', 'swapped', 'image_type', ...
+               'finger_index', 'swap_index_1', 'swap_index_2'};
+               
+	fid = fopen([out_path, file_name], 'wt');
+	csvFun = @(str)sprintf('%s, ',str);
+	xchar = cellfun(csvFun, headers, 'UniformOutput', false);
+	xchar = strcat(xchar{:});
+	xchar = strcat(xchar(1:end-1), '\n');
+	fprintf(fid, xchar);
+	fclose(fid);
+                   
+    dlmwrite([out_path, file_name], final_output, '-append');
 end
 
 
