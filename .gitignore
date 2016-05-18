@@ -4,3 +4,4 @@ browse.VC.db
 octave-workspace
 */octave-workspace
 misc/tfiles
+*.m~
