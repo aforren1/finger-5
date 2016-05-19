@@ -16,6 +16,7 @@ function output = main
         images = PsychImages(num_images, 'reversed', consts.reversed, 'scale', consts.scale);
         screen = PsychScreen('reversed', consts.reversed, 'big_screen', consts.big_screen, ...
                              'skip_tests', consts.skip_tests);
+		output = AllocateData; % allocates for one block
         
         if ui.keyboard_or_force
 			headers = {'id', 'day', 'block', 'trial', ...
@@ -41,7 +42,7 @@ function output = main
 		date_string = date_string(3:end - 2);
 		tfile_string = ui.tgt_name(1,:end - 4);
 		filename = ['data/id', num2str(ui.subject_id), '_', tfile_string, ...
-		            '_', date_string, '.dat'];
+		            '_', date_string, '.mat'];
 					
 		% add headers
 		fid = fopen(filename, 'wt');
@@ -67,7 +68,8 @@ function output = main
         else
             error('unrecognized experiment');
         end
-
+        
+		
     catch
         PsychPurge;
     end
