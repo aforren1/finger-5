@@ -19,3 +19,9 @@ catch
     warning('No active audio device')
 end
 
+if IsOctave
+	save('-mat7-binary', filename, 'output');
+else
+	save(filename, 'output', '-v7');
+end
+

@@ -17,7 +17,12 @@ function output = main
         screen = PsychScreen('reversed', consts.reversed, 'big_screen', consts.big_screen, ...
                              'skip_tests', consts.skip_tests);
 		output = AllocateData; % allocates for one block
-        
+		
+		[tgt, header, rest] = ParseTgt(['misc/tfiles/', ui.tgt_name]);
+        output.tfile_header = fieldnames(tgt);
+		output.tfile = rest;
+		HideCursor;
+		
         if ui.keyboard_or_force
 			headers = {'id', 'day', 'block', 'trial', ...
 					   'swapped', 'img_type', 'finger',...
@@ -46,7 +51,7 @@ function output = main
 					
 		% add headers
 		fid = fopen(filename, 'wt');
-        csvFun = @(str)sprintf('%s, ',str);
+        csvFun = @(str)sprintf('%s, ', str);
         xchar = cellfun(csvFun, headers, 'UniformOutput', false);
         xchar = strcat(xchar{:});
         xchar = strcat(xchar(1:end-1), '\n');
@@ -69,6 +74,12 @@ function output = main
             error('unrecognized experiment');
         end
         
+		if IsOctave
+		    save('-mat7-binary', filename, 'output');
+		else
+		    save(filename, 'output', '-v7');
+		end
+		ShowCursor;
 		
     catch
         PsychPurge;

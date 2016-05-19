@@ -1,4 +1,4 @@
-function out = ParseTgt(filename)
+function [out, headers, data] = ParseTgt(filename)
 % filename must be the full (relative) path to the .tgt file 
 % also assumes comma-delimited
 	fid = fopen(filename, 'r');
@@ -12,4 +12,7 @@ function out = ParseTgt(filename)
 	for ii = 1:length(headers)
 	    out.(headers{ii}) = data(:, ii);
 	end
+	
+	headers = sprintf('%s,' , headers{:});
+	headers = headers(1:end-1);
 end
