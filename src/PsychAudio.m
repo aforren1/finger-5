@@ -17,7 +17,7 @@ classdef PsychAudio
             % set sound reading function
             % octave classes and function handles are weird for now, so wait
             % until FillAudio to figure out the *actual* function
-            if (exist('OCTAVE_VERSION', 'builtin') || verLessThan('matlab', '8'))
+            if IsOctave || verLessThan('matlab', '8')
                 obj.which_audio_fun = 'wavread';
             else
                 obj.which_audio_fun = 'audioread';

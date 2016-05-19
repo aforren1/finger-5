@@ -8,6 +8,9 @@ classdef PsychImages
     
     methods
         function obj = PsychImages(n_images, varargin)
+		    if IsOctave
+                pkg load image % make sure we have imresize
+            end
             opts = struct('reversed', false,...
                           'scale', 0.22);
             opts = CheckInputs(opts, varargin{:});
@@ -19,9 +22,6 @@ classdef PsychImages
         end
         
         function obj = ImportImage(obj, file_path, img_index, scrn_handle, scrn_dims_x)
-            if exist('OCTAVE_VERSION', 'builtin') ~= 0
-                pkg load image % make sure we have imresize
-            end
             obj.raw_images{img_index} = imread(file_path);
             tempimg = imresize(obj.raw_images{img_index},...
                                [obj.scale*scrn_dims_x NaN]);
