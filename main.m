@@ -21,9 +21,13 @@ function output = main(tgt_path)
         if nargin == 0
             tgt_path = ['misc/tfiles/', ui.tgt_name];
         end
-		[tgt, header, rest] = ParseTgt(tgt_path);
-        output.tfile_header = fieldnames(tgt);
+		[tgt, header, rest] = ParseTgt(tgt_path, ',');
+        output.tfile_header = header;
 		output.tfile = rest;
+        output.image_type = ifelse(tgt.image_type(1), 'letters', 'hands');
+        output.swapped = tgt.swapped(1);
+        
+        
 		HideCursor;
 		
         if ui.keyboard_or_force
@@ -56,11 +60,13 @@ function output = main(tgt_path)
         fprintf(fid, xchar);
         fclose(fid);
 		
-        if strfind(ui.tgt_name, 'tr_')
+        if strfind(tgt_path, 'tr_')
+            output.block_type = 'tr';
             FillAudio(aud, [aud_dir, 'beepTrainFast.wav'], 1);
             FillAudio(aud, [aud_dir, 'smw_coin.wav'], 2);
             % use timed response experiment
-        elseif strfind(ui.tgt_name, 'rt_')
+        elseif strfind(tgt_path, 'rt_')
+            output.block_type = 'rt';
             FillAudio(aud, [aud_dir, 'beep.wav'], 1);
             aud_names = dir([aud_dir, 'orch*.wav']);
             for ii = 1:length(aud_names)
