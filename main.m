@@ -13,7 +13,6 @@ function output = main(tgt_path)
         ui = UserInputs;
         audio = PsychAudio(10);
         aud_dir = 'misc/sounds/';
-        images = PsychImages(num_images, 'reversed', consts.reversed, 'scale', consts.scale);
         screen = PsychScreen('reversed', consts.reversed, 'big_screen', consts.big_screen, ...
                              'skip_tests', consts.skip_tests);
 		output = AllocateData; % allocates for one block
@@ -24,9 +23,21 @@ function output = main(tgt_path)
 		[tgt, header, rest] = ParseTgt(tgt_path, ',');
         output.tfile_header = header;
 		output.tfile = rest;
-        output.image_type = ifelse(tgt.image_type(1), 'letters', 'hands');
+        output.image_type = ifelse(tgt.image_type(1), 'shapes', 'hands');
         output.swapped = tgt.swapped(1);
         
+        img_indices = unique(tgt.image_index);
+        images = PsychImages(length(img_indices),...
+                             'reversed', consts.reversed,...
+                             'scale', consts.scale);
+        subdir = ifelse(tgt.image_type(1), 'shapes', 'hands');
+        img_dir = ['misc/images', subdir];
+        img_names = dir([img_dir, '/*.jpg']);
+        
+        for ii = 1:length(img_indices)
+            images = ImportImage(images, [img_dir, img_names(img_indices(ii)).name], ...
+                                 img_indices(ii), screen.window, screen.dims(1));
+        end
         
 		HideCursor;
 		
@@ -66,6 +77,7 @@ function output = main(tgt_path)
             FillAudio(aud, [aud_dir, 'smw_coin.wav'], 2);
             % use timed response experiment
         elseif strfind(tgt_path, 'rt_')
+            cccombo = 0;
             output.block_type = 'rt';
             FillAudio(aud, [aud_dir, 'beep.wav'], 1);
             aud_names = dir([aud_dir, 'orch*.wav']);
@@ -83,7 +95,7 @@ function output = main(tgt_path)
 		else
 		    save(filename, 'output', '-v7');
 		end
-		ShowCursor;
+		PsychPurge;
 		
     catch
         PsychPurge;

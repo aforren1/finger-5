@@ -6,7 +6,7 @@ ShowCursor;
 
 try screen = CloseScreen(screen)
 catch
-    warning('Screen not open')
+    warning('Screen not open');
 end
 
 try DeleteKeyResponse(resp_device)
@@ -16,12 +16,16 @@ end
 
 try PsychPortAudio('Close')
 catch
-    warning('No active audio device')
+    warning('No active audio device');
 end
 
-if IsOctave
-	save('-mat7-binary', filename, 'output');
-else
-	save(filename, 'output', '-v7');
+try
+    if IsOctave
+        save('-mat7-binary', filename, 'output');
+    else
+        save(filename, 'output', '-v7');
+    end
+catch
+    warning('No data available!');
 end
 
