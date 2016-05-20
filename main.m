@@ -47,7 +47,7 @@ function output = main(tgt_path)
 		% use the date in the filename to prevent overwrites
 		date_string = datestr(now, 30);
 		date_string = date_string(3:end - 2);
-		tfile_string = tgt_path(max(strfind(tgt_path, '/')):end - 4);
+		tfile_string = tgt_path((max(strfind(tgt_path, '/'))+1):end - 4);
 		filename = ['data/id', num2str(ui.subject_id), '_', tfile_string, ...
 		            '_', date_string, '.mat'];
 					

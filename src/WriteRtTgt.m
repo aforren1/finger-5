@@ -57,7 +57,7 @@ function WriteRtTgt(out_path, varargin)
                'finger_index', 'image_index', 'swap_index_1', 'swap_index_2'};
                
 	fid = fopen([out_path, file_name], 'wt');
-	csvFun = @(str)sprintf('%s, ',str);
+	csvFun = @(str)sprintf('%s, ', str);
 	xchar = cellfun(csvFun, headers, 'UniformOutput', false);
 	xchar = strcat(xchar{:});
 	xchar = strcat(xchar(1:end-1), '\n');
