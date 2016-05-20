@@ -1,4 +1,4 @@
-function output = main
+function output = main(tgt_path)
 
     try
         % Get important things into memory
@@ -18,7 +18,10 @@ function output = main
                              'skip_tests', consts.skip_tests);
 		output = AllocateData; % allocates for one block
 		
-		[tgt, header, rest] = ParseTgt(['misc/tfiles/', ui.tgt_name]);
+        if nargin == 0
+            tgt_path = ['misc/tfiles/', ui.tgt_name];
+        end
+		[tgt, header, rest] = ParseTgt(tgt_path);
         output.tfile_header = fieldnames(tgt);
 		output.tfile = rest;
 		HideCursor;
