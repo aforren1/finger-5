@@ -1,17 +1,16 @@
 function WriteTrTgt(out_path, varargin)
-    % day is the day (int)
-    % block is the block (int)
-    % swapped is a 1x2 vector of the swapped indices, or 0 if no swap 
-    % image_type is 0 (hands) or 1 (symbols)
-    % repeats is the number of repetitions for the entire array
-    % easy_block overrides the image presentation times with some low number (1 = true)
     % copy-paste test:
-	% WriteTrTgt(1, 1, [7 9], 0, 3, 0, 'D:/blam/finger-5/misc/tfiles/');
+	% WriteTrTgt('~/Documents/BLAM/finger-5/misc/tfiles/');
+    % More thorough example:
+    % WriteTrTgt('~/Documents/BLAM/finger-5/misc/tfiles/', ...
+    %            'day', 2, 'block', 4, 'swapped', [1 3],...
+    %            'image_type', 1, 'repeats', 5, 'easy_block', 0,...
+    %            'ind_finger', 7:10, ind_img, 1:4, 'times', 0.5:0.1:1)
 	
     opts = struct('day', 1, 'block', 1, 'swapped', 0, ...
                   'image_type', 0, 'repeats', 1, ...
-                  'easy_block', 0, 'ind_finger', [7 8 9 10], ...
-                  'ind_img', [7 8 9 10], 'times', 0.3:0.05:0.8);
+                  'easy_block', 0, 'ind_finger', 7:10, ...
+                  'ind_img', 7:10, 'times', 0.3:0.05:0.8);
     opts = CheckInputs(opts, varargin{:});
     
     day = opts.day;
@@ -22,12 +21,18 @@ function WriteTrTgt(out_path, varargin)
     easy_block = opts.easy_block;
     ind_finger = opts.ind_finger;
     ind_img = opts.ind_img;
-    time = opts.times;   
+    times = opts.times;   
+    
+    if length(ind_finger) ~= length(ind_img)
+        error('Cannot handle weird mappings, make sure ind_finger and ind_img are the same length.');
+    end
+    
+    if any(swapped > length(ind_finger))
+        error('Swapping goes by index, not the actual value.');
+    end
     
     seed = day * block;
     rand('seed', seed);
-    ind_finger = [7 8 9 10];
-    times = 0.3:0.05:0.8; % for 300ms period beep train
 
     combos = allcomb(times, ind_finger);
     combos(:, 3) = -1;

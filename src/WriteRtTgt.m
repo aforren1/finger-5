@@ -1,30 +1,45 @@
-function WriteRtTgt(day, block, swapped, image_type, repeats, out_path)
-
-    % day is the day (integer)
-    % block is the block number (int)
-    % easy is whether the time is easy (500 ms fixed img presentation) or not
-    % swapped is 1x2 vector of the swapped image indices (or 0 if no swap)
-    % image_type is 0 (hands) or 1 (shapes)
-    % repeats is the number of repetitions for entire array
-    % out_path is the output path
-    % filename is determined by args, eg. 'dy1_bk1_sw0_sh1.tgt' would be
-    % 'day 1, block 1, easy, no swaps, shapes'.
+function WriteRtTgt(out_path, varargin)
     % copy-paste test:
-    % WriteRtTgt(3, 2, [8 10], 0, 3, '~/Documents/BLAM/finger-5/misc/tfiles/')
-
+    % WriteRtTgt('~/Documents/BLAM/finger-5/misc/tfiles/');
+    % More thorough example:
+    % WriteRtTgt('~/Documents/BLAM/finger-5/misc/tfiles/', ...
+    %            'day', 2, 'block', 4, 'swapped', [1 3],...
+    %            'image_type', 1, 'repeats', 1, ...
+    %            'ind_finger', 7:10, ind_img, 1:4)
+    
+    opts = struct('day', 1, 'block', 1, 'swapped', 0, ...
+                'image_type', 0, 'repeats', 1, ...
+                'ind_finger', 7:10, 'ind_img', 7:10);
+    opts = CheckInputs(opts, varargin{:});
+    
+    day = opts.day;
+    block = opts.block;
+    swapped = opts.swapped;
+    image_type = opts.image_type;
+    repeats = opts.repeats;
+    ind_finger = opts.ind_finger;
+    ind_img = opts.ind_img;
+        
+    if length(ind_finger) ~= length(ind_img)
+        error('Cannot handle weird mappings, make sure ind_finger and ind_img are the same length.');
+    end
+    
+    if any(swapped > length(ind_finger))
+        error('Swapping goes by index, not the actual value.');
+    end
+    
     seed = day * block; % avoid explicit patterns in seeding
     rand('seed', seed);
-    ind_finger = [7 8 9 10];
-    ind_finger = repmat(ind_finger, 1, repeats);
+    ind_finger = repmat([ind_finger; ind_img], 1, repeats);
     combos = ind_finger(:, randperm(size(ind_finger, 2)))'; % lazy
     combo_size = size(combos, 1);
 
     if any(swapped > 0) % if not zero
-        combos(:, 2) = swapped(1);
-        combos(:, 3) = swapped(2);
+        combos(:, 3) = swapped(1);
+        combos(:, 4) = swapped(2);
         swapped2 = 1;
     else
-        combos(:, 2:3) = 0;
+        combos(:, 3:4) = 0;
         swapped2 = 0;
     end
 
@@ -39,7 +54,7 @@ function WriteRtTgt(day, block, swapped, image_type, repeats, out_path)
     file_name = ['rt_','dy',num2str(day), '_bk', num2str(block), ...
                  '_sw', num2str(swapped2), '_sh', num2str(image_type), '.tgt'];
     headers = {'day', 'block', 'trial', 'swapped', 'image_type', ...
-               'finger_index', 'swap_index_1', 'swap_index_2'};
+               'finger_index', 'image_index', 'swap_index_1', 'swap_index_2'};
                
 	fid = fopen([out_path, file_name], 'wt');
 	csvFun = @(str)sprintf('%s, ',str);
