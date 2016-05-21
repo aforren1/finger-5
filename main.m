@@ -26,17 +26,17 @@ function output = main(tgt_path)
         output.image_type = ifelse(tgt.image_type(1), 'shapes', 'hands');
         output.swapped = tgt.swapped(1);
         
-        img_indices = unique(tgt.image_index);
-        images = PsychImages(length(img_indices),...
-                             'reversed', consts.reversed,...
-                             'scale', consts.scale);
-        subdir = ifelse(tgt.image_type(1), 'shapes', 'hands');
+		subdir = ifelse(tgt.image_type(1), 'shapes', 'hands');
         img_dir = ['misc/images', subdir];
         img_names = dir([img_dir, '/*.jpg']);
+        images = PsychImages(length(img_names),...
+                             'reversed', consts.reversed,...
+                             'scale', consts.scale);
+
         
-        for ii = 1:length(img_indices)
-            images = ImportImage(images, [img_dir, img_names(img_indices(ii)).name], ...
-                                 img_indices(ii), screen.window, screen.dims(1));
+        for ii = 1:length(img_names)
+            images = ImportImage(images, [img_dir, img_names(ii).name], ...
+                                 ii, screen.window, screen.dims(1));
         end
         
 		HideCursor;
