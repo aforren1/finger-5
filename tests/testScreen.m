@@ -1,7 +1,7 @@
 function success = testScreen()
 
 try
-    addpath src
+    addpath(genpath('src'))
     scrn = PsychScreen();
     WaitSecs(1);
     scrn = CloseScreen(scrn);

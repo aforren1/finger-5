@@ -4,9 +4,10 @@ function output = main(tgt_path)
         % Get important things into memory
 		WaitSecs(0.001);
 		GetSecs;
+	    HideCursor;
 		Screen('preference', 'verbosity', 1);
         warning('off', 'all');
-		addpath('src');
+		addpath(genpath('src'));
 		
         % boilerplate initialization
         consts = Constants;
@@ -39,7 +40,7 @@ function output = main(tgt_path)
                                  ii, screen.window, screen.dims(1));
         end
         
-		HideCursor;
+	
 		
         if ui.keyboard_or_force
             resp_device = KeyboardResponse(valid_indices,...
@@ -62,14 +63,7 @@ function output = main(tgt_path)
 		filename = ['data/id', num2str(ui.subject_id), '_', tfile_string, ...
 		            '_', date_string, '.mat'];
 					
-		% add headers
-		fid = fopen(filename, 'wt');
-        csvFun = @(str)sprintf('%s, ', str);
-        xchar = cellfun(csvFun, headers, 'UniformOutput', false);
-        xchar = strcat(xchar{:});
-        xchar = strcat(xchar(1:end-1), '\n');
-        fprintf(fid, xchar);
-        fclose(fid);
+
 		
         if strfind(tgt_path, 'tr_')
             output.block_type = 'tr';

@@ -1,7 +1,7 @@
 function success = testKeyboardResponse
 
 try
-    addpath src 
+    addpath(genpath('src')) 
     kbrd = KeyboardResponse(7:10);
     StartKeyResponse(kbrd);
     time_ref = WaitSecs(1);

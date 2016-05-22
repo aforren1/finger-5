@@ -1,6 +1,6 @@
 function success = testPsychAudio()
 
-addpath src
+addpath(genpath('src'))
 
 try
    aud = PsychAudio(3);

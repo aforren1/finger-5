@@ -1,6 +1,6 @@
 function success = testImages
 
-addpath src
+addpath(genpath('src'))
 
     try
         
