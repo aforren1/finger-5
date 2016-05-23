@@ -5,6 +5,7 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 	% refer to AllocateData for structure
 	output.block.trial(ii).abs_time_on = GetSecs;
 	% The audio onset will be used as the "true" trial start
-
+    WipeScreen(screen);
+	time_flip = FlipScreen(screen);
 										
 end

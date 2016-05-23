@@ -78,6 +78,17 @@ classdef PsychScreen
             sca;
             obj = [];
         end % end CloseScreen
+        
+        function WipeScreen(obj)
+            Screen('FillRect', obj.window, obj.background_colour);
+        end
+        
+        function out_time = FlipScreen(screen, flip_time)
+            if nargin < 2
+                flip_time = 0;
+            end
+            out_time = Screen('Flip', screen.window, flip_time);
+        end
   
     end % end methods
 end % end classdef   
