@@ -1,5 +1,5 @@
 function output = TimedRespTrial(screen, audio, images, resp_device, ...
-                                 feedback, tgt, output, ii);
+                                 press_feedback, tgt, output, ii);
 
 	% output.block.trial(ii)
 	% refer to AllocateData for structur
@@ -7,7 +7,7 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	output.block.trial(ii).abs_time_on = GetSecs;
 	% The audio onset will be used as the "true" trial start
     WipeScreen(screen);
-	DrawOutline(feedback, screen.window);
+	DrawOutline(press_feedback, screen.window);
 	time_flip = FlipScreen(screen);
 	
 	% DrawImage(images, tgt.image_index(ii), screen.window);

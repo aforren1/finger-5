@@ -1,5 +1,5 @@
 function [output, cccombo] = RapidTrial(screen, audio, images,...
-                                        resp_device, feedback, tgt, output, cccombo, ii);
+                                        resp_device, press_feedback, tgt, output, cccombo, ii);
 
 	% output.block.trial(ii)
 	% refer to AllocateData for structure
@@ -12,12 +12,12 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 	output.block.trial(ii).abs_time_on = ref_time;
 	% The audio onset will be used as the "true" trial start
     WipeScreen(screen);
-	DrawOutline(feedback, screen.window);
+	DrawOutline(press_feedback, screen.window);
 	time_flip = FlipScreen(screen);
 	
 	% get things ready for trial
 	WipeScreen(screen);
-	DrawOutline(feedback, screen.window);
+	DrawOutline(press_feedback, screen.window);
 	DrawImage(images, tgt.image_index(ii), screen.window);
 	
 	% play audio and show sound at the "same time"

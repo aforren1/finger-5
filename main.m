@@ -28,7 +28,7 @@ function output = main(tgt_path)
         output.swapped = tgt.swapped(1);
 		output.day = tgt.day(1);
 		output.block_num = tgt.block(1);
-        feedback = KeyFeedback(screen.dims(1), screen.dims(2),...
+        press_feedback = KeyFeedback(screen.dims(1), screen.dims(2),...
                               'num_boxes', length(unique(tgt.finger_index)))
 
         
@@ -82,7 +82,7 @@ function output = main(tgt_path)
 			
 			for ii = 1:max(tgt.trial)
 			    output = TimedRespTrial(screen, audio, images, resp_device,...
-                                        feedback, tgt, output, ii);
+                                        press_feedback, tgt, output, ii);
 			end
             
         elseif strfind(tgt_path, 'rt_')
@@ -99,7 +99,7 @@ function output = main(tgt_path)
             
 			for ii = 1:max(tgt.trial)
                 [output, cccombo] = RapidTrial(screen, audio, images, resp_device, ...
-                                               feedback, tgt, output, cccombo, ii);
+                                               press_feedback, tgt, output, cccombo, ii);
 			    max_cccombo = ifelse(cccombo > max_cccombo, cccombo, max_cccombo);
 			end
 			
