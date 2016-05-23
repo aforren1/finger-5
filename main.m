@@ -39,7 +39,6 @@ function output = main(tgt_path)
             images = ImportImage(images, [img_dir, img_names(ii).name], ...
                                  ii, screen.window, screen.dims(1));
         end
-        
 	
 		
         if ui.keyboard_or_force
@@ -71,7 +70,10 @@ function output = main(tgt_path)
             FillAudio(aud, [aud_dir, 'smw_coin.wav'], 2);
             % use timed response experiment
         elseif strfind(tgt_path, 'rt_')
-            cccombo = 0;
+            cccombo = 0; % keep track of current streak
+			max_cccombo = 0; % keep track of max streak
+			correct_counter = 0; % keep track of # correct (for P(correct) later)
+			tttime = GetSecs;
             output.block_type = 'rt';
             FillAudio(aud, [aud_dir, 'beep.wav'], 1);
             aud_names = dir([aud_dir, 'orch*.wav']);
@@ -80,6 +82,8 @@ function output = main(tgt_path)
             end
             
             % use serial reaction time experiment
+			final_time = GetSecs - tttime;
+			final_percent = correct_counter/total_trials;
         else
             error('unrecognized experiment');
         end
