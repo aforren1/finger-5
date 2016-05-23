@@ -61,7 +61,7 @@ classdef KeyboardResponse
                 time_press = min(pressed(pressed > 0));
                 new_press = [press_index, time_press];
             else % no new presses
-                new_press = [NaN, NaN];
+                new_press = [-1, -1];
             end
             
             if any(released > 0) % figure out if any keys have been released in the frame
@@ -72,7 +72,7 @@ classdef KeyboardResponse
                 time_release = min(released(released > 0));
                 new_release = [release_index, time_release];
             else
-                new_release = [NaN, NaN];       
+                new_release = [-1, -1];       
             end   
             KbQueueFlush;       
         end % end CheckKeyResponse

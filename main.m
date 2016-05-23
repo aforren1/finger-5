@@ -28,6 +28,9 @@ function output = main(tgt_path)
         output.swapped = tgt.swapped(1);
 		output.day = tgt.day(1);
 		output.block_num = tgt.block(1);
+        feedback = KeyFeedback(screen.dims(1), screen.dims(2),...
+                              'num_boxes', length(unique(tgt.finger_index)))
+
         
 		subdir = ifelse(tgt.image_type(1), 'shapes', 'hands');
         img_dir = ['misc/images', subdir];
@@ -78,7 +81,8 @@ function output = main(tgt_path)
             FillAudio(aud, [aud_dir, 'smw_coin.wav'], 2);
 			
 			for ii = 1:max(tgt.trial)
-			    output = TimedRespTrial(screen, audio, images, resp_device, output, ii);
+			    output = TimedRespTrial(screen, audio, images, resp_device,...
+                                        feedback, tgt, output, ii);
 			end
             
         elseif strfind(tgt_path, 'rt_')
@@ -94,7 +98,8 @@ function output = main(tgt_path)
             end
             
 			for ii = 1:max(tgt.trial)
-                [output, cccombo] = RapidTrial(screen, audio, images, resp_device, output, cccombo, ii);
+                [output, cccombo] = RapidTrial(screen, audio, images, resp_device, ...
+                                               feedback, tgt, output, cccombo, ii);
 			    max_cccombo = ifelse(cccombo > max_cccombo, cccombo, max_cccombo);
 			end
 			

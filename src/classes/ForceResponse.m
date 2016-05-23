@@ -88,13 +88,13 @@ classdef ForceResponse
             
             press_index = find(delta_press == 1);
             if isempty(press_index)
-                press_index = NaN;
-                time_press = NaN;
+                press_index = -1;
+                time_press = -1;
             end
             release_index = find(delta_press == -1);
             if isempty(release_index)
-                release_index = NaN;
-                time_release = NaN;
+                release_index = -1;
+                time_release = -1;
             end
             
             new_press = [press_index, time_press];
