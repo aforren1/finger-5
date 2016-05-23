@@ -40,8 +40,20 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 	
 	if temp_out(1) ~= tgt.finger_index(ii)
 	
+	else % correct on the first try
+		if temp_out(2) - time_image < 0.5 % only increment if fast
+		    PlayAudio(audio, ifelse(cccombo + 2 > 9, 9, cccombo + 2));
+			cccombo = cccombo + 1;
+		end
+    end
 	
+	Priority(0);
+	if class(resp_device) == 'ForceResponse'
+	    [force_traces, timestamp] = CheckFullResponse(resp_device);
+		output.block.trial(ii).forces = [timestamp; force_traces]; % check dims!
+	end
 	
+	StopKeyResponse(resp_device);
 	output.block.trial(ii).images.abs_time_on = time_image;
 	output.block.trial(ii).images.index = tgt.image_index(ii);
 	output.block.trial(ii).images.rel_time_on = time_image - ref_time;
@@ -50,6 +62,5 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 	output.block.trial(ii).presses = temp_presses;
 	
 	
-	Priority(0);
 										
 end
