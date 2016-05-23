@@ -26,6 +26,8 @@ function output = main(tgt_path)
 		output.tfile = rest;
         output.image_type = ifelse(tgt.image_type(1), 'shapes', 'hands');
         output.swapped = tgt.swapped(1);
+		output.day = tgt.day(1);
+		output.block_num = tgt.block(1);
         
 		subdir = ifelse(tgt.image_type(1), 'shapes', 'hands');
         img_dir = ['misc/images', subdir];
@@ -68,7 +70,11 @@ function output = main(tgt_path)
             output.block_type = 'tr';
             FillAudio(aud, [aud_dir, 'beepTrainFast.wav'], 1);
             FillAudio(aud, [aud_dir, 'smw_coin.wav'], 2);
-            % use timed response experiment
+			
+			for ii = 1:max(tgt.trial)
+			    output = TimedRespTrial(screen, audio, images, resp_device, output, ii);
+			end
+            
         elseif strfind(tgt_path, 'rt_')
             cccombo = 0; % keep track of current streak
 			max_cccombo = 0; % keep track of max streak
@@ -81,13 +87,18 @@ function output = main(tgt_path)
                 FillAudio(aud, [aud_dir, aud_names(ii)], ii);
             end
             
-            % use serial reaction time experiment
+			for ii = 1:max(tgt.trial)
+                [output, cccombo] = RapidTrial(screen, audio, images, resp_device, output, cccombo, ii);
+			    max_cccombo = ifelse(cccombo > max_cccombo, cccombo, max_cccombo);
+			end
+			
 			final_time = GetSecs - tttime;
-			final_percent = correct_counter/total_trials;
+			final_percent = correct_counter/max(tgt.trial);
         else
             error('unrecognized experiment');
-        end
+        end % end trial calls
         
+		% save data to mat file (and convert to flat?)
 		if IsOctave
 		    save('-mat7-binary', filename, 'output');
 		else
