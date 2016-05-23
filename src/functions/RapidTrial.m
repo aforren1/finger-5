@@ -39,6 +39,10 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 	temp_press(1).rel_time_on = temp_out(2) - ref_time;
 	
 	if temp_out(1) ~= tgt.finger_index(ii)
+	    cccombo = 0;
+		updated_screen_press = RapidPenalty(screen, resp_device, ...
+		                                    tgt, images, press_feedback, ...
+											updated_screen_press, ii);
 	
 	else % correct on the first try
 		if temp_out(2) - time_image < 0.5 % only increment if fast
