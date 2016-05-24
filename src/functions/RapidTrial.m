@@ -3,7 +3,7 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 
 	% output.block.trial(ii)
 	% refer to AllocateData for structure
-	
+	fail = false;
 	temp_presses(1:3) = struct('index', int16(-1), 'rel_time_on', -1,...
 					           'rel_time_off', -1, 'abs_time_on', -1, ...
 					           'abs_time_off', -1);
@@ -29,21 +29,28 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 	
 	
 	updated_screen_press = zeros(1, length(resp_device.valid_indices));
-	temp_out = [-1 -1];
-	while temp_out(1) == -1
-	    [temp_out, updated_screen_press] = CheckKeyResponse(resp_device, updated_screen_press);
-		WaitSecs(0.01);
-	end
-	temp_presses(1).index = temp_out(1);
-	temp_presses(1).abs_time_on = temp_out(2);
-	temp_press(1).rel_time_on = temp_out(2) - ref_time;
+    [temp_out, temp_presses, updated_screen_press] = InnerRapidLoop(resp_device, updated_screen_press, ...
+	                                                                temp_presses, 1);
 	
-	if temp_out(1) ~= tgt.finger_index(ii)
+	if temp_out(1) ~= tgt.finger_index(ii) % try 2
 	    cccombo = 0;
 		updated_screen_press = RapidPenalty(screen, resp_device, ...
 		                                    tgt, images, press_feedback, ...
 											updated_screen_press, ii);
-	
+		[temp_out, temp_presses, updated_screen_press] = InnerRapidLoop(resp_device, updated_screen_press, ...
+																		temp_presses, 2);
+		
+		if temp_out(1) ~= tgt.finger_index(ii) % try 3
+			updated_screen_press = RapidPenalty(screen, resp_device, ...
+												tgt, images, press_feedback, ...
+												updated_screen_press, ii);
+			[temp_out, temp_presses, updated_screen_press] = InnerRapidLoop(resp_device, updated_screen_press, ...
+																			temp_presses, 3);
+			if temp_out(1) ~= tgt.finger_index(ii) % no more tries
+			    fail = true;
+			end		
+		end
+		
 	else % correct on the first try
 		if temp_out(2) - time_image < 0.5 % only increment if fast
 		    PlayAudio(audio, ifelse(cccombo + 2 > 9, 9, cccombo + 2));
