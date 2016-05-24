@@ -62,6 +62,8 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 	if class(resp_device) == 'ForceResponse'
 	    [force_traces, timestamp] = CheckFullResponse(resp_device);
 		output.block.trial(ii).forces = [timestamp; force_traces]; % check dims!
+    else
+		output.block.trial(ii).forces = [];
 	end
 	
 	StopKeyResponse(resp_device);

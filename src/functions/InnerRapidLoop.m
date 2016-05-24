@@ -1,11 +1,7 @@
 % on the wishlist, to cut down the crud in the trial loop.
-% however, it ends up passing 
-%function out = InnerRapidLoop(in)
-%
-%end
 
-function [temp_out, temp_presses] = InnerRapidLoop(resp_dev,...
-                                                   u_s_p, temp_presses, ii)
+
+function [temp_out, temp_presses] = InnerRapidLoop(resp_dev, u_s_p, temp_presses, ii)
     temp_out = [-1 -1];
     while temp_out(1) == -1
         [temp_out, u_s_p] = CheckKeyResponse(resp_device, u_s_p);
