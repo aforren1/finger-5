@@ -44,13 +44,6 @@ function output = main(tgt_path)
             images = ImportImage(images, [img_dir, img_names(ii).name], ...
                                  ii, screen.window, screen.dims(1));
         end
-		% swap indices if true
-	    if tgt.swapped(1)
-		    ind1 = tgt.swap_index_1(1);
-			ind2 = tgt.swap_index_2(1);
-			images.raw_images{ind2, ind1} = images.raw_images{ind1, ind2};
-		    images.ptb_images(ind2, ind1) = images.ptb_images(ind1, ind2);
-		end
 		
         if ui.keyboard_or_force
             resp_device = KeyboardResponse(valid_indices,...

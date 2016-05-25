@@ -31,6 +31,20 @@ function WriteTrTgt(out_path, varargin)
         error('Swapping goes by index, not the actual value.');
     end
     
+    if any(diff(ind_img) < 0) || any(diff(ind_img) < 0)
+        error('Make sure to define indices in increasing order.')
+    end
+    
+    if any(swapped > 0) % if not zero
+        combos(:, 3) = swapped(1);
+        combos(:, 4) = swapped(2);
+        swapped2 = 1;
+        ind_img([swapped(2), swapped(1)]) = ind_img([swapped(1), swapped(2)]);
+    else
+        combos(:, 3:4) = 0;
+        swapped2 = 0;
+    end    
+    
     seed = day * block;
     rand('seed', seed);
 
@@ -48,14 +62,6 @@ function WriteTrTgt(out_path, varargin)
         combos(:, 1) = min(times);
     end
 
-    if any(swapped > 0)
-        combos(:, 4) = swapped(1);
-        combos(:, 5) = swapped(2);
-        swapped2 = 1;
-    else
-        combos(:, 4:5) = 0;
-        swapped2 = 0;
-    end
     % combos is (times, finger, image, swap1, swap2)
 
     % add catch trials

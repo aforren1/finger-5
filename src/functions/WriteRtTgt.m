@@ -1,4 +1,7 @@
 function WriteRtTgt(out_path, varargin)
+    % note: to keep down the moving parts, the swap *must* be defined when
+    % the tgt file is generated, ie. ('swapped', [3 1], 'ind_img', 7:10). The
+    % swap will be computed here 
     % copy-paste test:
     % WriteRtTgt('~/Documents/BLAM/finger-5/misc/tfiles/');
     % More thorough example:
@@ -28,20 +31,27 @@ function WriteRtTgt(out_path, varargin)
         error('Swapping goes by index, not the actual value.');
     end
     
+    if any(diff(ind_img) < 0) || any(diff(ind_img) < 0)
+        error('Make sure to define indices in increasing order.')
+    end
+    
+    if any(swapped > 0) % if not zero
+        combos(:, 3) = swapped(1);
+        combos(:, 4) = swapped(2);
+        swapped2 = 1;
+        ind_img([swapped(2), swapped(1)]) = ind_img([swapped(1), swapped(2)]);
+    else
+        combos(:, 3:4) = 0;
+        swapped2 = 0;
+    end
+    
     seed = day * block; % avoid explicit patterns in seeding
     rand('seed', seed);
     ind_finger = repmat([ind_finger; ind_img], 1, repeats);
     combos = ind_finger(:, randperm(size(ind_finger, 2)))'; % lazy
     combo_size = size(combos, 1);
 
-    if any(swapped > 0) % if not zero
-        combos(:, 3) = swapped(1);
-        combos(:, 4) = swapped(2);
-        swapped2 = 1;
-    else
-        combos(:, 3:4) = 0;
-        swapped2 = 0;
-    end
+
 
     % day, block, trial, easy, swapped, image_type, tgt finger,
     % time, swap1, swap2
