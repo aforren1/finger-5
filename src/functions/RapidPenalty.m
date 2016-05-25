@@ -4,7 +4,7 @@ function u_s_p = RapidPenalty(screen, resp_device, tgt, images,...
 
     WipeScreen(screen);
     DrawOutline(press_feedback, screen.window);
-    DrawFill(press_feedback, screen.window, 'red', u_s_p, 1); 
+    DrawFill(press_feedback, screen.window, 'red', u_s_p, 0); 
     DrawImage(images, tgt.image_index(ii), screen.window);                             
     FlipScreen(screen);
     

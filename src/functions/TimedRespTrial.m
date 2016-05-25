@@ -3,6 +3,10 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 
 	% output.block.trial(ii)
 	% refer to AllocateData for structure
+	temp_presses(1:3) = struct('index', int16(-1), 'rel_time_on', -1,...
+						       'rel_time_off', -1, 'abs_time_on', -1, ...
+						       'abs_time_off', -1);
+	press_count = 1;
 	updated_screen_press = zeros(1, length(resp_device.valid_indices));
 	num_frames = round(1.6/screen.ifi); 
 	first_screen_press = updated_screen_press;
@@ -44,9 +48,20 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	    end
 		
 		% check keyboard
-		
+		temp_press = [-1 -1];
+		[temp_press, updated_screen_press] = CheckKeyResponse(resp_device, updated_screen_press);
+		if temp_press(1) > 0 && press_count < 4
+		    temp_presses(press_count).index = temp_press(1);
+			temp_presses(press_count).abs_time_on = temp_press(2);
+			temp_presses(press_count).rel_time_on = temp_press(2) - time_audio;
+			
+		    if press_count == 1
+			    first_screen_press = updated_screen_press;
+		    end
+			press_count = press_count + 1;
+		end
 		% draw temporary feedback
-		
+		DrawFill(press_feedback, screen.window, 'gray', updated_screen_press, 0);
 		
 		time_flip3 = FlipScreen(screen, time_flip3 + 0.5*screen.ifi);
 		if save_image_time
@@ -55,10 +70,7 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	
 	end
 
-	
-
-	% DrawImage(images, tgt.image_index(ii), screen.window);
-	
+		
 	Priority(0);
 	if class(resp_device) == 'ForceResponse'
 	    [force_traces, timestamp] = CheckFullResponse(resp_device);

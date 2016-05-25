@@ -51,6 +51,9 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 																			temp_presses, 3);
 			if temp_out(1) ~= tgt.finger_index(ii) % no more tries
 			    fail = true;
+				updated_screen_press = RapidPenalty(screen, resp_device, ...
+									tgt, images, press_feedback, ...
+									updated_screen_press, ii);
 			end		
 		end
 		
@@ -81,7 +84,7 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 	temp_col = ifelse(fail, 'blue', 'green');
 	WipeScreen(screen);
 	DrawOutline(press_feedback, screen.window);
-	DrawFill(press_feedback, screen.window, temp_col, updated_screen_press, 1);
+	DrawFill(press_feedback, screen.window, temp_col, updated_screen_press, 0);
 	DrawImage(images, tgt.image_index(ii), screen.window);
 	FlipScreen(screen);
 	WaitSecs(.2); % show feedback briefly
