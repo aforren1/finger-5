@@ -1,4 +1,4 @@
-function success = testPsychAudio()
+function success = testPsychAudio
 
 addpath(genpath('src'))
 

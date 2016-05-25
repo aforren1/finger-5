@@ -22,7 +22,7 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	
 	time_audio = time_flip + screen.ifi;
 	time_flip2 = time_flip + 0.5 * screen.ifi;
-	if img_time < 0
+	if tgt.image_time < 0
 	    img_frame = -1;
 		time_image = -1;
 	else % not a catch trial
@@ -72,6 +72,8 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 
 		
 	Priority(0);
+    StopKeyResponse(resp_device);
+
 	if class(resp_device) == 'ForceResponse'
 	    [force_traces, timestamp] = CheckFullResponse(resp_device);
 		output.block.trial(ii).forces = [timestamp; force_traces]; % check dims!
@@ -79,12 +81,59 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 		output.block.trial(ii).forces = []; % saves space
 	end
 	
-	StopKeyResponse(resp_device);
-	output.block.trial(ii).images.abs_time_on = time_image;
+	WipeScreen(screen);
+	DrawOutline(press_feedback, screen.window);
+	
+	% show feedback wrt correctness
+	if time_image > 0 % there was an image, so correctness matters
+	    if temp_presses(1).index == tgt.finger_index(ii)
+		    temp_colour = 'green';
+			feedback_parts = 1;
+		else
+		    temp_colour = 'red';
+			feedback_parts = 0;
+		end
+	    DrawImage(images, tgt.image_index(ii), screen.window);
+		output.block.trial(ii).images.abs_time_on = time_image;
+    	output.block.trial(ii).images.rel_time_on = time_image - ref_time;	
+		
+	else % any press correct
+	    temp_colour = 'green';
+	    output.block.trial(ii).images.abs_time_on = -1;
+		output.block.trial(ii).images_rel_time_on = -1;
+		feedback_parts = 1;
+	end
+	DrawFill(press_feedback, screen.window, temp_colour, first_screen_press, 0);
+	
+	time_diff = temp_presses(1).rel_time_on - 1.4; % magic number
+	if time_diff == -2.4 || time_diff > resp_device.timing_tolerance || 
+	    tempstr = 'Too late!';
+		feedback_parts = 0;
+		DrawFill(press_feedback, screen.window, screen.background_colour, first_screen_press, 0.2);
+    elseif time_diff < -resp_device.timing_tolerance
+	    tempstr = 'Too early!';
+		feedback_parts = 0;
+		DrawFill(press_feedback, screen.window, screen.background_colour, first_screen_press, 0.2);
+    else
+        tempstr = 'Good timing!';
+        feedback_parts = feedback_parts + 1;
+    end
+
+    DrawFormattedText(screen.window, tempstr, 'center', ...
+	                  screen.dims(2)*0.18, screen.text_colour);
+					  
+    FlipScreen(screen);
+
+    if feedback_parts > 1
+        PlayAudio(audio, 2, 0);
+	end
 	output.block.trial(ii).images.index = tgt.image_index(ii);
-	output.block.trial(ii).images.rel_time_on = time_image - ref_time;
 	output.block.trial(ii).sounds.abs_time_on = time_audio;
 	output.block.trial(ii).sounds.rel_time_on = time_audio - ref_time;
 	temp_presses(structfind(temp_presses, 'rel_time_on', -1)) = []; % prune unused fields (should have at least one)
 	output.block.trial(ii).presses = temp_presses;
+	
+	WaitSecs(0.2);
+	
+	
 end
