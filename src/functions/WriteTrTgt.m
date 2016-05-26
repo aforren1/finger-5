@@ -44,8 +44,23 @@ function WriteTrTgt(out_path, varargin)
         indices = find(combos(:,2) == ind_finger(ii));
         combos(indices, 3) = ind_img(ii);
     end
-
-    combos = combos(randperm(size(combos, 1)), :);
+    limit = 10000;
+    maxnum = 3;
+    count = 1;
+    while count < limit
+        combos2 = combos(randperm(size(combos, 1)), :);
+        i = [find(combos2(1:end - 1, 1) ~= combos2(2:end, 1)); length(combos2)];
+        l = diff([0; i]);
+        
+        if any(l > maxnum) % no more than two allowed
+            count = count + 1;
+            continue;        
+        else
+            break;
+        end     
+    end
+    %combos = combos(randperm(size(combos, 1)), :);
+    combos = combos2;
     combo_size = size(combos, 1);
 
     if easy_block

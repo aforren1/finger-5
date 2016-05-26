@@ -35,6 +35,28 @@ function WriteRtTgt(out_path, varargin)
         error('Make sure to define indices in increasing order.')
     end
     
+    seed = day * block; % avoid explicit patterns in seeding
+    rand('seed', seed);
+    ind_finger = repmat([ind_finger; ind_img]', repeats, 1);
+    limit = 10000;
+    maxnum = 3;
+    count = 1;
+    while count < limit
+        combos = ind_finger(randperm(size(ind_finger, 1)), :);
+        i = [find(combos(1:end - 1, 1) ~= combos(2:end, 1)); length(combos)];
+        l = diff([0; i]);
+        
+        if any(l > maxnum) % no more than two allowed
+            count = count + 1;
+            continue;        
+        else
+            break;
+        end     
+    end
+       
+    %combos = ind_finger(:, randperm(size(ind_finger, 2)))'; % lazy
+    combo_size = size(combos, 1);
+
     if any(swapped > 0) % if not zero
         combos(:, 3) = swapped(1);
         combos(:, 4) = swapped(2);
@@ -44,14 +66,6 @@ function WriteRtTgt(out_path, varargin)
         combos(:, 3:4) = 0;
         swapped2 = 0;
     end
-    
-    seed = day * block; % avoid explicit patterns in seeding
-    rand('seed', seed);
-    ind_finger = repmat([ind_finger; ind_img], 1, repeats);
-    combos = ind_finger(:, randperm(size(ind_finger, 2)))'; % lazy
-    combo_size = size(combos, 1);
-
-
 
     % day, block, trial, easy, swapped, image_type, tgt finger,
     % time, swap1, swap2
