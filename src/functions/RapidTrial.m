@@ -5,6 +5,7 @@ function [output, cccombo, correct_counter] = RapidTrial(screen, audio, images,.
 	% refer to AllocateData for structure
 	fail = false;
 	temp_presses(1:3) = struct('index', int16(-1), 'rel_time_on', -1, 'abs_time_on', -1);
+%	temp_releases(1:3) = struct('index', int16(-1), 'rel_time_off', -1, 'abs_time_off', -1);
 
 	Priority(screen.priority);
 	ref_time = GetSecs;

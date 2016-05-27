@@ -52,7 +52,8 @@ classdef KeyboardResponse
             if any(pressed > 0)
                 press_key = KbName(find(pressed > 0));
                 if iscell(press_key)
-                    press_key = cell2mat(press_key);
+                    %press_key = cell2mat(press_key);
+                    press_key = press_key{1}; % incorrect, but how to fix?
                 end
                 
                 new_screen_press = ismember(obj.valid_keys, press_key); % for updated feedback
