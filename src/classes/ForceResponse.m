@@ -6,6 +6,7 @@ classdef ForceResponse
         force_max;
         daq;
         volt_2_newts;
+        timing_tolerance;
     end
     
     methods

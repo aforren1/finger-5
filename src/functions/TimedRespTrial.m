@@ -3,6 +3,7 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 
 	% output.trial(ii)
 	% refer to AllocateData for structure
+	save_image_time = false;
 	temp_presses(1:3) = struct('index', int16(-1), 'rel_time_on', -1,...
 						       'rel_time_off', -1, 'abs_time_on', -1, ...
 						       'abs_time_off', -1);
@@ -30,7 +31,8 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 		img_frame = round((0.5 + tgt.image_time(ii))/screen.ifi);
     end
 	
-    PlayAudio(audio, 1, time_audio);	
+    PlayAudio(audio, 1, time_audio);
+	ref_time = time_audio;	
 	time_flip3 = FlipScreen(screen, time_flip2);
 	StartKeyResponse(resp_device);
 	
@@ -39,7 +41,7 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 		DrawOutline(press_feedback, screen.window);
 		
 		if frame >= img_frame
-		    DrawImage(images, tgt,image_index(ii), screen.window);
+		    DrawImage(images, tgt.image_index(ii), screen.window);
 			if frame == img_frame
 			    save_image_time = true;
 			else
@@ -106,14 +108,14 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	DrawFill(press_feedback, screen.window, temp_colour, first_screen_press, 0);
 	
 	time_diff = temp_presses(1).rel_time_on - 1.4; % magic number
-	if time_diff == -2.4 || time_diff > resp_device.timing_tolerance || 
+	if time_diff == -2.4 || time_diff > resp_device.timing_tolerance
 	    tempstr = 'Too late!';
 		feedback_parts = 0;
-		DrawFill(press_feedback, screen.window, screen.background_colour, first_screen_press, 0.2);
+		DrawFill(press_feedback, screen.window, 'black', first_screen_press, 0.2); % hack
     elseif time_diff < -resp_device.timing_tolerance
 	    tempstr = 'Too early!';
 		feedback_parts = 0;
-		DrawFill(press_feedback, screen.window, screen.background_colour, first_screen_press, 0.2);
+		DrawFill(press_feedback, screen.window, 'black', first_screen_press, 0.2);
     else
         tempstr = 'Good timing!';
         feedback_parts = feedback_parts + 1;

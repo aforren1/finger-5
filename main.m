@@ -89,7 +89,7 @@ function output = main(tgt_path)
                 FillAudio(audio, [aud_dir, aud_names(ii).name], ii+ 1);
             end
             
-			for ii = 1:max(tgt.trial)
+			for ii = 1:length(tgt.trial)
                 [output, cccombo] = RapidTrial(screen, audio, images, resp_device, ...
                                                press_feedback, tgt, output, cccombo, ii);
 			    max_cccombo = ifelse(cccombo > max_cccombo, cccombo, max_cccombo);

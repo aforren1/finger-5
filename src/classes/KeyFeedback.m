@@ -8,6 +8,9 @@ classdef KeyFeedback
         red;
         green;
         blue;
+        gray;
+        black;
+        white;
     end
     
     methods
@@ -17,13 +20,19 @@ classdef KeyFeedback
                           'reversed', false,...
                           'red', [255, 30, 63],...
                           'green', [97, 255, 77],...
-                          'blue', [85, 98, 255]);
+                          'blue', [85, 98, 255],...
+                          'gray', [190, 190, 190],...
+                          'black', [0, 0, 0],...
+                          'white', [255, 255, 255]);
             opts = CheckInputs(opts, varargin{:});
             obj.num_boxes = opts.num_boxes;
             obj.outline_colour = ifelse(opts.reversed, [0 0 0], [255 255 255]);
             obj.red = opts.red;
             obj.green = opts.green;
             obj.blue = opts.blue;
+            obj.gray = opts.gray;
+            obj.black = opts.black;
+            obj.white = opts.white;
             
             spacing = linspace(0.18, 0.82, obj.num_boxes);
             rect_area = (spacing(2) - spacing(1))/2;
