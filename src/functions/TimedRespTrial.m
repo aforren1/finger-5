@@ -4,10 +4,13 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	% output.trial(ii)
 	% refer to AllocateData for structure
 	save_image_time = false;
-	temp_presses(1:3) = struct('index', int16(-1), 'rel_time_on', -1,...
-						       'rel_time_off', -1, 'abs_time_on', -1, ...
-						       'abs_time_off', -1);
+
+	temp_presses(1:3) = struct('index', int16(-1), 'rel_time_on', -1, 'abs_time_on', -1);
+	temp_releases(1:3) = struct('index', int16(-1), 'rel_time_off', -1, 'abs_time_off', -1);
+	
 	press_count = 1;
+	release_count = 1;
+	
 	updated_screen_press = zeros(1, length(resp_device.valid_indices));
 	num_frames = round(1.6/screen.ifi); 
 	first_screen_press = updated_screen_press;
@@ -51,7 +54,8 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 		
 		% check keyboard
 		temp_press = [-1 -1];
-		[temp_press, updated_screen_press] = CheckKeyResponse(resp_device, updated_screen_press);
+		temp_release = [-1 -1];
+		[temp_press, updated_screen_press, temp_release] = CheckKeyResponse(resp_device, updated_screen_press);
 		if temp_press(1) > 0 && press_count < 4
 		    temp_presses(press_count).index = temp_press(1);
 			temp_presses(press_count).abs_time_on = temp_press(2);
@@ -62,6 +66,14 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 		    end
 			press_count = press_count + 1;
 		end
+		
+		if temp_release(1) > 0 && release_count < 4
+		    temp_releases(release_count).index = temp_release(1);
+			temp_releases(release_count).abs_time_off = temp_release(2);
+			temp_releases(release_count).rel_time_off = temp_release(2) - time_audio;
+			
+			release_count = release_count + 1;
+	    end
 		% draw temporary feedback
 		DrawFill(press_feedback, screen.window, 'gray', updated_screen_press, 0);
 		
@@ -133,7 +145,9 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	output.trial(ii).sounds.abs_time_on = time_audio;
 	output.trial(ii).sounds.rel_time_on = time_audio - ref_time;
 	temp_presses(structfind(temp_presses, 'rel_time_on', -1)) = []; % prune unused fields (should have at least one)
-	output.trial(ii).presses = temp_presses;
+	temp_releases(structfind(temp_releases, 'rel_time_off', -1)) = [];
+	output.trial(ii).press_ons = temp_presses;
+	output.trial(ii).press_offs = temp_releases;
 	
 	WaitSecs(0.2);
 	

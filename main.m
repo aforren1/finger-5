@@ -72,7 +72,7 @@ function output = main(tgt_path)
             FillAudio(audio, [aud_dir, 'beepTrainFast.wav'], 1);
             FillAudio(audio, [aud_dir, 'smw_coin.wav'], 2);
 			
-			for ii = 1:max(tgt.trial)
+			for ii = 1:length(tgt.trial)
 			    output = TimedRespTrial(screen, audio, images, resp_device,...
                                         press_feedback, tgt, output, ii);
 			end
@@ -90,13 +90,20 @@ function output = main(tgt_path)
             end
             
 			for ii = 1:length(tgt.trial)
-                [output, cccombo] = RapidTrial(screen, audio, images, resp_device, ...
-                                               press_feedback, tgt, output, cccombo, ii);
+                [output, cccombo, correct_counter] = RapidTrial(screen, audio, images, resp_device, ...
+                                               press_feedback, tgt, output, cccombo, ii, correct_counter);
 			    max_cccombo = ifelse(cccombo > max_cccombo, cccombo, max_cccombo);
 			end
 			
 			final_time = GetSecs - tttime;
-			final_percent = correct_counter/max(tgt.trial);
+			final_percent = correct_counter/length(tgt.trial);
+            endstr = ['Final time: ', num2str(final_time), ' seconds\n',...
+                      'Percent correct: ', num2str(final_percent*100), '%\n',...
+                      'Killing spree: ', num2str(max_cccombo)];
+                  
+            DrawFormattedText(screen.window, endstr, 'center', 'center', screen.text_colour);
+            FlipScreen(screen);
+            WaitSecs(5);
         else
             error('unrecognized experiment');
         end % end trial calls

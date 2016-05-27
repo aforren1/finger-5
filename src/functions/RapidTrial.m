@@ -1,12 +1,11 @@
-function [output, cccombo] = RapidTrial(screen, audio, images,...
-                                        resp_device, press_feedback, tgt, output, cccombo, ii);
+function [output, cccombo, correct_counter] = RapidTrial(screen, audio, images,...
+                                        resp_device, press_feedback, tgt, output, cccombo, ii, correct_counter);
 
 	% output.trial(ii)
 	% refer to AllocateData for structure
 	fail = false;
-	temp_presses(1:3) = struct('index', int16(-1), 'rel_time_on', -1,...
-					           'rel_time_off', -1, 'abs_time_on', -1, ...
-					           'abs_time_off', -1);
+	temp_presses(1:3) = struct('index', int16(-1), 'rel_time_on', -1, 'abs_time_on', -1);
+
 	Priority(screen.priority);
 	ref_time = GetSecs;
 	output.trial(ii).abs_time_on = ref_time;
@@ -58,6 +57,8 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 		end
 		
 	else % correct on the first try
+		
+		correct_counter = correct_counter + 1;
 		if temp_out(2) - time_image < 0.5 % only increment if fast
 		    PlayAudio(audio, ifelse(cccombo + 2 > 9, 9, cccombo + 2));
 			cccombo = cccombo + 1;
@@ -79,7 +80,9 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 	output.trial(ii).sounds.abs_time_on = time_audio;
 	output.trial(ii).sounds.rel_time_on = time_audio - ref_time;
 	temp_presses(structfind(temp_presses, 'rel_time_on', -1)) = []; % prune unused fields (should have at least one)
-	output.trial(ii).presses = temp_presses;
+	output.trial(ii).press_ons = temp_presses;
+	output.trial(ii).press_offs = []; % kill until I come up with a better sampling schema
+	
 	
 	temp_col = ifelse(fail, 'blue', 'green');
 	WipeScreen(screen);

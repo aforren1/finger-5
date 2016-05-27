@@ -46,7 +46,7 @@ classdef KeyboardResponse
             obj = [];
         end
         
-        function [new_press, updated_screen_press] = CheckKeyResponse(obj, updated_screen_press)
+        function [new_press, updated_screen_press, new_release] = CheckKeyResponse(obj, updated_screen_press)
         
             [~, pressed, released] = KbQueueCheck;
             if any(pressed > 0)
