@@ -86,7 +86,7 @@ classdef ForceResponse
             % make sure to check n and n-1 conditions
             delta_press = new_screen_press_scaled - updated_screen_press;
             
-            press_index = find(delta_press == 1);
+            press_index = obj.valid_indices(find(delta_press == 1));
             if isempty(press_index)
                 press_index = -1;
                 time_press = -1;

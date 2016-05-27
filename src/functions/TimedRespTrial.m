@@ -1,7 +1,7 @@
 function output = TimedRespTrial(screen, audio, images, resp_device, ...
                                  press_feedback, tgt, output, ii);
 
-	% output.block.trial(ii)
+	% output.trial(ii)
 	% refer to AllocateData for structure
 	temp_presses(1:3) = struct('index', int16(-1), 'rel_time_on', -1,...
 						       'rel_time_off', -1, 'abs_time_on', -1, ...
@@ -11,7 +11,7 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	num_frames = round(1.6/screen.ifi); 
 	first_screen_press = updated_screen_press;
 	Priority(screen.priority);
-	output.block.trial(ii).abs_time_on = GetSecs;
+	output.trial(ii).abs_time_on = GetSecs;
 	% The audio onset will be used as the "true" trial start
     WipeScreen(screen);
 	DrawOutline(press_feedback, screen.window);
@@ -74,11 +74,11 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	Priority(0);
     StopKeyResponse(resp_device);
 
-	if class(resp_device) == 'ForceResponse'
+	if 	isa(resp_device, 'ForceResponse')
 	    [force_traces, timestamp] = CheckFullResponse(resp_device);
-		output.block.trial(ii).forces = [timestamp; force_traces]; % check dims!
+		output.trial(ii).forces = [timestamp; force_traces]; % check dims!
     else
-		output.block.trial(ii).forces = []; % saves space
+		output.trial(ii).forces = []; % saves space
 	end
 	
 	WipeScreen(screen);
@@ -94,13 +94,13 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 			feedback_parts = 0;
 		end
 	    DrawImage(images, tgt.image_index(ii), screen.window);
-		output.block.trial(ii).images.abs_time_on = time_image;
-    	output.block.trial(ii).images.rel_time_on = time_image - ref_time;	
+		output.trial(ii).images.abs_time_on = time_image;
+    	output.trial(ii).images.rel_time_on = time_image - ref_time;	
 		
 	else % any press correct
 	    temp_colour = 'green';
-	    output.block.trial(ii).images.abs_time_on = -1;
-		output.block.trial(ii).images_rel_time_on = -1;
+	    output.trial(ii).images.abs_time_on = -1;
+		output.trial(ii).images_rel_time_on = -1;
 		feedback_parts = 1;
 	end
 	DrawFill(press_feedback, screen.window, temp_colour, first_screen_press, 0);
@@ -127,11 +127,11 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
     if feedback_parts > 1
         PlayAudio(audio, 2, 0);
 	end
-	output.block.trial(ii).images.index = tgt.image_index(ii);
-	output.block.trial(ii).sounds.abs_time_on = time_audio;
-	output.block.trial(ii).sounds.rel_time_on = time_audio - ref_time;
+	output.trial(ii).images.index = tgt.image_index(ii);
+	output.trial(ii).sounds.abs_time_on = time_audio;
+	output.trial(ii).sounds.rel_time_on = time_audio - ref_time;
 	temp_presses(structfind(temp_presses, 'rel_time_on', -1)) = []; % prune unused fields (should have at least one)
-	output.block.trial(ii).presses = temp_presses;
+	output.trial(ii).presses = temp_presses;
 	
 	WaitSecs(0.2);
 	

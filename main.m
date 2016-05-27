@@ -29,11 +29,11 @@ function output = main(tgt_path)
 		output.day = tgt.day(1);
 		output.block_num = tgt.block(1);
         press_feedback = KeyFeedback(screen.dims(1), screen.dims(2),...
-                              'num_boxes', length(unique(tgt.finger_index)))
+                              'num_boxes', length(unique(tgt.finger_index)));
 
         
-		subdir = ifelse(tgt.image_type(1), 'shapes', 'hands');
-        img_dir = ['misc/images', subdir];
+		subdir = ifelse(tgt.image_type(1), 'shapes/', 'hands/');
+        img_dir = ['misc/images/', subdir];
         img_names = dir([img_dir, '/*.jpg']);
         images = PsychImages(length(img_names),...
                              'reversed', consts.reversed,...
@@ -45,6 +45,7 @@ function output = main(tgt_path)
                                  ii, screen.window, screen.dims(1));
         end
 		
+        valid_indices = unique(tgt.finger_index);
         if ui.keyboard_or_force
             resp_device = KeyboardResponse(valid_indices,...
                                            'possible_keys', consts.possible_keys, ...
@@ -66,12 +67,10 @@ function output = main(tgt_path)
 		filename = ['data/id', num2str(ui.subject_id), '_', tfile_string, ...
 		            '_', date_string, '.mat'];
 					
-
-		
         if strfind(tgt_path, 'tr_')
             output.block_type = 'tr';
-            FillAudio(aud, [aud_dir, 'beepTrainFast.wav'], 1);
-            FillAudio(aud, [aud_dir, 'smw_coin.wav'], 2);
+            FillAudio(audio, [aud_dir, 'beepTrainFast.wav'], 1);
+            FillAudio(audio, [aud_dir, 'smw_coin.wav'], 2);
 			
 			for ii = 1:max(tgt.trial)
 			    output = TimedRespTrial(screen, audio, images, resp_device,...
@@ -84,10 +83,10 @@ function output = main(tgt_path)
 			correct_counter = 0; % keep track of # correct (for P(correct) later)
 			tttime = GetSecs;
             output.block_type = 'rt';
-            FillAudio(aud, [aud_dir, 'beep.wav'], 1);
+            FillAudio(audio, [aud_dir, 'beep.wav'], 1);
             aud_names = dir([aud_dir, 'orch*.wav']);
             for ii = 1:length(aud_names)
-                FillAudio(aud, [aud_dir, aud_names(ii)], ii);
+                FillAudio(audio, [aud_dir, aud_names(ii).name], ii+ 1);
             end
             
 			for ii = 1:max(tgt.trial)
@@ -103,6 +102,8 @@ function output = main(tgt_path)
         end % end trial calls
         
 		% save data to mat file (and convert to flat?)
+        % remove unused trials
+        output.trial(structfind(output.trial, 'abs_time_on', -1)) = [];
 		if IsOctave
 		    save('-mat7-binary', filename, 'output');
 		else
@@ -110,8 +111,9 @@ function output = main(tgt_path)
 		end
 		PsychPurge;
 		
-    catch
+    catch err
         PsychPurge;
+        rethrow(err);
     end
 
 end

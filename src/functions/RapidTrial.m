@@ -1,7 +1,7 @@
 function [output, cccombo] = RapidTrial(screen, audio, images,...
                                         resp_device, press_feedback, tgt, output, cccombo, ii);
 
-	% output.block.trial(ii)
+	% output.trial(ii)
 	% refer to AllocateData for structure
 	fail = false;
 	temp_presses(1:3) = struct('index', int16(-1), 'rel_time_on', -1,...
@@ -9,7 +9,7 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 					           'abs_time_off', -1);
 	Priority(screen.priority);
 	ref_time = GetSecs;
-	output.block.trial(ii).abs_time_on = ref_time;
+	output.trial(ii).abs_time_on = ref_time;
 	% The audio onset will be used as the "true" trial start
     WipeScreen(screen);
 	DrawOutline(press_feedback, screen.window);
@@ -31,8 +31,8 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 	updated_screen_press = zeros(1, length(resp_device.valid_indices));
     [temp_out, temp_presses, updated_screen_press] = InnerRapidLoop(resp_device,...
 	                                                                updated_screen_press, ...
-	                                                                temp_presses, 1);
-	
+	                                                                temp_presses, 1, ref_time);
+
 	if temp_out(1) ~= tgt.finger_index(ii) % try 2
 	    cccombo = 0;
 		updated_screen_press = RapidPenalty(screen, resp_device, ...
@@ -40,7 +40,7 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 											updated_screen_press, ii);
 		[temp_out, temp_presses, updated_screen_press] = InnerRapidLoop(resp_device,...
 		                                                                updated_screen_press, ...
-																		temp_presses, 2);
+																		temp_presses, 2, ref_time);
 		
 		if temp_out(1) ~= tgt.finger_index(ii) % try 3
 			updated_screen_press = RapidPenalty(screen, resp_device, ...
@@ -48,7 +48,7 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
 												updated_screen_press, ii);
 			[temp_out, temp_presses, updated_screen_press] = InnerRapidLoop(resp_device,...
 			                                                                updated_screen_press, ...
-																			temp_presses, 3);
+																			temp_presses, 3, ref_time);
 			if temp_out(1) ~= tgt.finger_index(ii) % no more tries
 			    fail = true;
 				updated_screen_press = RapidPenalty(screen, resp_device, ...
@@ -65,21 +65,21 @@ function [output, cccombo] = RapidTrial(screen, audio, images,...
     end
 	
 	Priority(0);
-	if class(resp_device) == 'ForceResponse'
+	if isa(resp_device, 'ForceResponse')
 	    [force_traces, timestamp] = CheckFullResponse(resp_device);
-		output.block.trial(ii).forces = [timestamp; force_traces]; % check dims!
+		output.trial(ii).forces = [timestamp; force_traces]; % check dims!
     else
-		output.block.trial(ii).forces = []; % 
+		output.trial(ii).forces = []; % 
 	end
 	
 	StopKeyResponse(resp_device);
-	output.block.trial(ii).images.abs_time_on = time_image;
-	output.block.trial(ii).images.index = tgt.image_index(ii);
-	output.block.trial(ii).images.rel_time_on = time_image - ref_time;
-	output.block.trial(ii).sounds.abs_time_on = time_audio;
-	output.block.trial(ii).sounds.rel_time_on = time_audio - ref_time;
+	output.trial(ii).images.abs_time_on = time_image;
+	output.trial(ii).images.index = tgt.image_index(ii);
+	output.trial(ii).images.rel_time_on = time_image - ref_time;
+	output.trial(ii).sounds.abs_time_on = time_audio;
+	output.trial(ii).sounds.rel_time_on = time_audio - ref_time;
 	temp_presses(structfind(temp_presses, 'rel_time_on', -1)) = []; % prune unused fields (should have at least one)
-	output.block.trial(ii).presses = temp_presses;
+	output.trial(ii).presses = temp_presses;
 	
 	temp_col = ifelse(fail, 'blue', 'green');
 	WipeScreen(screen);

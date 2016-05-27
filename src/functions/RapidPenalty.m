@@ -23,7 +23,8 @@ function u_s_p = RapidPenalty(screen, resp_device, tgt, images,...
     WipeScreen(screen);
     DrawOutline(press_feedback, screen.window);
     DrawImage(images, tgt.image_index(ii), screen.window);
+    FlipScreen(screen);
     u_s_p = zeros(1, length(resp_device.valid_indices));  
-    CheckKeyResponse(resp_device, updated_screen_press); % dump recent data?
+    CheckKeyResponse(resp_device, u_s_p); % dump recent data?
                               
 end

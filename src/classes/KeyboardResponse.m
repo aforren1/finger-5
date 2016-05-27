@@ -21,7 +21,7 @@ classdef KeyboardResponse
             obj.timing_tolerance = opts.timing_tolerance;
             obj.force_min = opts.force_min;
             obj.force_max = opts.force_max;
-            obj.valid_keys = opts.possible_keys(valid_indices);
+            obj.valid_keys = opts.possible_keys{1}(valid_indices);
             obj.valid_indices = valid_indices;
             
             keys = zeros(1, 256);
@@ -57,7 +57,7 @@ classdef KeyboardResponse
                 
                 new_screen_press = ismember(obj.valid_keys, press_key); % for updated feedback
                 updated_screen_press = updated_screen_press + new_screen_press;
-                press_index = find(new_screen_press);
+                press_index = obj.valid_indices(find(new_screen_press));
                 time_press = min(pressed(pressed > 0));
                 new_press = [press_index, time_press];
             else % no new presses

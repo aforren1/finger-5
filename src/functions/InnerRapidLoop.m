@@ -1,7 +1,7 @@
 % on the wishlist, to cut down the crud in the trial loop.
 
 
-function [temp_out, temp_presses] = InnerRapidLoop(resp_dev, u_s_p, temp_presses, ii)
+function [temp_out, temp_presses, u_s_p] = InnerRapidLoop(resp_dev, u_s_p, temp_presses, ii, ref_time)
     temp_out = [-1 -1];
     while temp_out(1) == -1
         [temp_out, u_s_p] = CheckKeyResponse(resp_dev, u_s_p);
