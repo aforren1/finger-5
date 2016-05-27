@@ -71,7 +71,7 @@ classdef ForceResponse
             obj = [];
         end
         
-        function [new_press, updated_screen_press] = CheckKeyResponse(obj, updated_screen_press)
+        function [new_press, updated_screen_press, new_release] = CheckKeyResponse(obj, updated_screen_press)
             while(isempty(new_screen_press))
                 new_screen_press = getsample(obj.daq);
             end
