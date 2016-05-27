@@ -54,12 +54,11 @@ function WriteTrTgt(out_path, varargin)
         
         if any(l > maxnum) % no more than two allowed
             count = count + 1;
-            continue;        
         else
             break;
         end     
     end
-    %combos = combos(randperm(size(combos, 1)), :);
+
     combos = combos2;
     combo_size = size(combos, 1);
 

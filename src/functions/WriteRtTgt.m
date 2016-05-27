@@ -48,13 +48,11 @@ function WriteRtTgt(out_path, varargin)
         
         if any(l > maxnum) % no more than two allowed
             count = count + 1;
-            continue;        
         else
             break;
         end     
     end
        
-    %combos = ind_finger(:, randperm(size(ind_finger, 2)))'; % lazy
     combo_size = size(combos, 1);
 
     if any(swapped > 0) % if not zero
