@@ -69,7 +69,10 @@ function [output, cccombo, correct_counter] = RapidTrial(screen, audio, images,.
 	Priority(0);
 	if isa(resp_device, 'ForceResponse')
 	    [force_traces, timestamp] = CheckFullResponse(resp_device);
-		force_traces = sum(force_traces, 1)/size(force_traces, 1);
+		% subtract the mean to center on zero
+		for nn = 1:size(force_traces, 1)		
+		    force_traces(nn) = force_traces(nn) - (sum(force_traces, 1)/size(force_traces, 1)); 
+	    end
 		output.trial(ii).forces = [timestamp; force_traces]; % check dims!
     else
 		output.trial(ii).forces = []; % 
