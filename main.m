@@ -22,6 +22,7 @@ function output = main(tgt_path)
             tgt_path = ['misc/tfiles/', ui.tgt_name];
         end
 		[tgt, header, rest] = ParseTgt(tgt_path, ',');
+        output.id = ui.subject_id;
         output.tfile_header = header;
 		output.tfile = rest;
         output.image_type = ifelse(tgt.image_type(1), 'shapes', 'hands');
@@ -111,6 +112,9 @@ function output = main(tgt_path)
 		% save data to mat file (and convert to flat?)
         % remove unused trials
         output.trial(structfind(output.trial, 'abs_time_on', -1)) = [];
+        if ~exist('data', 'dir')
+           mkdir('data'); 
+        end
 		if IsOctave
 		    save('-mat7-binary', filename, 'output');
 		else

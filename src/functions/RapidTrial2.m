@@ -1,5 +1,5 @@
 function [output, cccombo, correct_counter] = RapidTrial2(screen, audio, images,...
-                                        resp_device, press_feedback, tgt, output, cccombo, ii, correct_counter);
+                                        resp_device, press_feedback, tgt, output, cccombo, ii, correct_counter)
 
     wrong = false; % wrong guess 
     fail = false; % missed three times
@@ -108,7 +108,7 @@ function [output, cccombo, correct_counter] = RapidTrial2(screen, audio, images,
     if tries == 2 % successful on first go
         correct_counter = correct_counter + 1;
         if temp_out(2) - time_image < 0.5
-        	PlayAudio(audio, ifelse(cccombo + 2 > 9, 9, cccombo + 2));
+        	PlayAudio(audio, ifelse(cccombo + 2 > 9, 9, cccombo + 2), 0);
             cccombo = cccombo + 1;
         end
         
