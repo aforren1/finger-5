@@ -153,6 +153,9 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	output.trial(ii).press_ons = temp_presses;
 	output.trial(ii).press_offs = temp_releases;
 	
+	output.trial(ii).ignore_ons = [];
+	output.trial(ii).ignore_offs = [];
+	
 	WaitSecs(0.2);
 	
 	

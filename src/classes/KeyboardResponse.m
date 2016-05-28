@@ -69,7 +69,7 @@ classdef KeyboardResponse
                 release_key = KbName(find(released > 0));
                 new_screen_release = ismember(obj.valid_keys, release_key);
                 updated_screen_press = updated_screen_press - new_screen_release;
-                release_index = find(new_screen_release);
+                release_index = obj.valid_indices(find(new_screen_release));
                 time_release = min(released(released > 0));
                 new_release = [release_index, time_release];
             else

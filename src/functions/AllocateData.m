@@ -2,6 +2,9 @@ function block = AllocateData
 
 	press_ons(1:3) = struct('index', int16(-1), 'rel_time_on', -1, 'abs_time_on', -1);
 	press_offs(1:3) = struct('index', int16(-1), 'rel_time_off', -1, 'abs_time_off', -1);
+	ignore_ons(1:10) = struct('index', int16(-1), 'rel_time_on', -1, 'abs_time_on', -1);
+	ignore_offs(1:10) = struct('index', int16(-1), 'rel_time_off', -1, 'abs_time_off', -1);
+	
 	images(1) = struct('index', int16(-1), 'rel_time_on', -1, ...
 					   'abs_time_on', -1);
 	sounds(1) = struct('rel_time_on', -1, ...

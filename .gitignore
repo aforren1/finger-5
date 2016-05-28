@@ -3,6 +3,5 @@ browse.VC.db
 .vscode
 octave-workspace
 */octave-workspace
-misc/tfiles
 *.m~
 data
