@@ -114,10 +114,12 @@ function [output, cccombo, correct_counter] = RapidTrial2(screen, audio, images,
             cccombo = cccombo + 1;
         end
         
-    elseif tries > 3
+    elseif wrong
         WipeScreen(screen);
         DrawOutline(press_feedback, screen.window);
         DrawImage(images, tgt.image_index(ii), screen.window);
+        updated_screen_press = zeros(1, length(resp_device.valid_indices));
+        updated_screen_press(resp_device.valid_indices == tgt.finger_index(ii)) = 1;
         fail = true;
     end
     

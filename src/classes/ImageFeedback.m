@@ -22,7 +22,7 @@ classdef ImageFeedback
         
         function DrawImageFeedback(obj, scrn_handle)
             Screen('DrawTexture', scrn_handle, obj.ptb_image,...
-                   [], [], [], [], 0.5);
+                   [], [], [], [], 0.5); % last term is the alpha
         end
     end
 end
