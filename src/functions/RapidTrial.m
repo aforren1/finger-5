@@ -1,12 +1,19 @@
 function [output, cccombo, correct_counter] = RapidTrial(screen, audio, images,...
                                         resp_device, press_feedback, tgt, output,...
-										cccombo, ii, correct_counter, feedback_image);
+                                        cccombo, ii, correct_counter, feedback_image)
 
-	% output.trial(ii)
-	% refer to AllocateData for structure
-	fail = false;
+    wrong = false; % wrong guess 
+    fail = false; % missed three times
+    tries = 1; % number of attempts
+    tries_rel = 1;
+    tries_ignored = 1;
+    tries_ignored_rel = 1;
+    
 	temp_presses(1:3) = struct('index', int16(-1), 'rel_time_on', -1, 'abs_time_on', -1);
-%	temp_releases(1:3) = struct('index', int16(-1), 'rel_time_off', -1, 'abs_time_off', -1);
+    temp_ignore_press(1:10) = struct('index', int16(-1), 'rel_time_on', -1, 'abs_time_on', -1);
+    temp_releases(1:3) = struct('index', int16(-1), 'rel_time_off', -1, 'abs_time_off', -1);
+    temp_ignore_release(1:10) = struct('index', int16(-1), 'rel_time_off', -1, 'abs_time_off', -1);
+
 
 	Priority(screen.priority);
 	ref_time = GetSecs;
@@ -22,52 +29,108 @@ function [output, cccombo, correct_counter] = RapidTrial(screen, audio, images,.
 	DrawImage(images, tgt.image_index(ii), screen.window);
 	
 	% play audio and show sound at the "same time"
-    time_audio = time_flip + screen.ifi;
+    time_audio = time_flip + screen.ifi; % time_audio is reference for the trial
     PlayAudio(audio, 1, time_audio);
 	time_image = time_flip + 0.5 * screen.ifi;
-	FlipScreen(screen, time_image);
+	time2 = FlipScreen(screen, time_image); % use this time for loop spacing
 	StartKeyResponse(resp_device);
-	
-	
-	updated_screen_press = zeros(1, length(resp_device.valid_indices));
-    [temp_out, temp_presses, updated_screen_press] = InnerRapidLoop(resp_device,...
-	                                                                updated_screen_press, ...
-	                                                                temp_presses, 1, ref_time);
 
-	if temp_out(1) ~= tgt.finger_index(ii) % try 2
-	    cccombo = 0;
-		updated_screen_press = RapidPenalty(screen, resp_device, ...
-		                                    tgt, images, press_feedback, ...
-											updated_screen_press, ii);
-		[temp_out, temp_presses, updated_screen_press] = InnerRapidLoop(resp_device,...
-		                                                                updated_screen_press, ...
-																		temp_presses, 2, ref_time);
-		
-		if temp_out(1) ~= tgt.finger_index(ii) % try 3
-			updated_screen_press = RapidPenalty(screen, resp_device, ...
-												tgt, images, press_feedback, ...
-												updated_screen_press, ii);
-			[temp_out, temp_presses, updated_screen_press] = InnerRapidLoop(resp_device,...
-			                                                                updated_screen_press, ...
-																			temp_presses, 3, ref_time);
-			if temp_out(1) ~= tgt.finger_index(ii) % no more tries
-			    fail = true;
-				updated_screen_press = RapidPenalty(screen, resp_device, ...
-									tgt, images, press_feedback, ...
-									updated_screen_press, ii);
-			end		
-		end
-		
-	else % correct on the first try
-		
-		correct_counter = correct_counter + 1;
-		if temp_out(2) - time_image < 0.5 % only increment if fast
-		    PlayAudio(audio, ifelse(cccombo + 2 > 9, 9, cccombo + 2));
-			cccombo = cccombo + 1;
-		end
+	updated_screen_press = zeros(1, length(resp_device.valid_indices));
+
+    % loop until certain conditions are met
+    % break on too many guesses
+    while tries < 4
+        
+        WipeScreen(screen);
+        DrawOutline(press_feedback, screen.window);
+        DrawImage(images, tgt.image_index(ii), screen.window);
+        
+        if wrong
+            if GetSecs > time_wrong % reset wrong counter
+                wrong = false;
+            else
+                DrawFill(press_feedback, screen.window, 'red', ...
+                         bad_screen_press, 0);
+                DrawImageFeedback(feedback_image, screen.window);
+            end
+        end
+        
+        % save all presses
+        temp_out = [-1 -1];
+        temp_rel = temp_out;
+        [temp_out, updated_screen_press, temp_rel] = CheckKeyResponse(resp_device, updated_screen_press);
+        if temp_out(1) > 0      
+            if ~wrong
+                temp_presses(tries).index = temp_out(1);
+                temp_presses(tries).abs_time_on = temp_out(2);
+                temp_presses(tries).rel_time_on = temp_out(2) - ref_time;
+                tries = tries + 1;
+            else
+                temp_presses(tries).index = temp_out(1);
+                temp_presses(tries).abs_time_on = temp_out(2);
+                temp_presses(tries).rel_time_on = temp_out(2) - ref_time;
+                tries_ignored = tries_ignored + 1;
+            end
+        end
+        
+        if temp_rel(1) > 0
+            if ~wrong
+                temp_releases(tries_rel).index = temp_rel(1);
+                temp_releases(tries_rel).abs_time_off = temp_rel(2);
+                temp_releases(tries_rel).rel_time_off = temp_rel(2) - ref_time;
+                tries_rel = tries_rel + 1;
+            else
+                temp_ignore_release(tries_ignored_rel).index = temp_rel(1);
+                temp_ignore_release(tries_ignored_rel).abs_time_off = temp_rel(2);
+                temp_ignore_release(tries_ignored_rel).rel_time_off = temp_rel(2) - ref_time;
+                tries_ignored_rel = tries_ignored_rel + 1;         
+            end
+        end % end of press saving
+        
+        if ~wrong
+            if temp_out(1) > 0
+                if temp_out(1) ~= tgt.finger_index(ii)
+                    wrong = true;
+                    cccombo = 0;
+                    time_wrong = GetSecs + 1;
+                    DrawFill(press_feedback, screen.window, 'red', ...
+                             updated_screen_press, 0);
+                    bad_screen_press = updated_screen_press;
+                else % correct answer
+                    break;
+                end
+            end           
+        end
+        
+        time2 = FlipScreen(screen, time2 + 0.5 * screen.ifi);
+              
+    end % while true loop
+    
+    Priority(0);
+    if tries == 2 % successful on first go
+        correct_counter = correct_counter + 1;
+        if temp_out(2) - time_image < 0.5
+        	PlayAudio(audio, ifelse(cccombo + 2 > 9, 9, cccombo + 2), 0);
+            cccombo = cccombo + 1;
+        end
+        
+    elseif wrong
+        WipeScreen(screen);
+        DrawOutline(press_feedback, screen.window);
+        DrawImage(images, tgt.image_index(ii), screen.window);
+        % fill in the correct index
+        updated_screen_press = zeros(1, length(resp_device.valid_indices));
+        updated_screen_press(resp_device.valid_indices == tgt.finger_index(ii)) = 1;
+        fail = true;
     end
-	
-	Priority(0);
+    
+    % draw correct feedback
+    tempcol = ifelse(fail, 'blue', 'green');
+    DrawFill(press_feedback, screen.window, tempcol, updated_screen_press, 0);
+    
+    FlipScreen(screen);
+    WaitSecs(.2);
+    
 	if isa(resp_device, 'ForceResponse')
 	    [force_traces, timestamp] = CheckFullResponse(resp_device);
 		% subtract the mean to center on zero
@@ -87,15 +150,12 @@ function [output, cccombo, correct_counter] = RapidTrial(screen, audio, images,.
 	output.trial(ii).sounds.rel_time_on = time_audio - ref_time;
 	temp_presses(structfind(temp_presses, 'rel_time_on', -1)) = []; % prune unused fields (should have at least one)
 	output.trial(ii).press_ons = temp_presses;
-	output.trial(ii).press_offs = []; % kill until I come up with a better sampling schema
-	
-	
-	temp_col = ifelse(fail, 'blue', 'green');
-	WipeScreen(screen);
-	DrawOutline(press_feedback, screen.window);
-	DrawFill(press_feedback, screen.window, temp_col, updated_screen_press, 0);
-	DrawImage(images, tgt.image_index(ii), screen.window);
-	FlipScreen(screen);
-	WaitSecs(.2); % show feedback briefly
-										
+	temp_releases(structfind(temp_releases, 'rel_time_off', -1)) = [];
+    output.trial(ii).press_offs = temp_releases;
+    
+    temp_ignore_press(structfind(temp_ignore_press, 'rel_time_on', -1)) = [];
+    output.trial(ii).ignore_ons = temp_ignore_press;
+    temp_ignore_release(structfind(temp_ignore_release, 'rel_time_off', -1)) = [];
+    output.trial(ii).ignore_offs = temp_ignore_release;   
+
 end
