@@ -1,5 +1,6 @@
 function [output, cccombo, correct_counter] = RapidTrial2(screen, audio, images,...
-                                        resp_device, press_feedback, tgt, output, cccombo, ii, correct_counter)
+                                        resp_device, press_feedback, tgt, output,...
+                                        cccombo, ii, correct_counter, feedback_image)
 
     wrong = false; % wrong guess 
     fail = false; % missed three times
@@ -50,6 +51,7 @@ function [output, cccombo, correct_counter] = RapidTrial2(screen, audio, images,
             else
                 DrawFill(press_feedback, screen.window, 'red', ...
                          bad_screen_press, 0);
+                DrawImageFeedback(feedback_image, screen.window);
             end
         end
         
@@ -112,7 +114,10 @@ function [output, cccombo, correct_counter] = RapidTrial2(screen, audio, images,
             cccombo = cccombo + 1;
         end
         
-    elseif tries > 4
+    elseif tries > 3
+        WipeScreen(screen);
+        DrawOutline(press_feedback, screen.window);
+        DrawImage(images, tgt.image_index(ii), screen.window);
         fail = true;
     end
     

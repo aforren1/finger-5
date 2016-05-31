@@ -1,5 +1,6 @@
 function [output, cccombo, correct_counter] = RapidTrial(screen, audio, images,...
-                                        resp_device, press_feedback, tgt, output, cccombo, ii, correct_counter);
+                                        resp_device, press_feedback, tgt, output,...
+										cccombo, ii, correct_counter, feedback_image);
 
 	% output.trial(ii)
 	% refer to AllocateData for structure

@@ -28,6 +28,7 @@ function zero_volts = Countdown(screen, resp_device)
         
         DrawFormattedText(screen.window, countdown_string,...
                           'center', 'center', screen.text_colour);
+        FlipScreen(screen, when(current));
        
     end
 end
