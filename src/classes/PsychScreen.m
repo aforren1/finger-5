@@ -37,7 +37,7 @@ classdef PsychScreen
             obj.black = opts.black;
             obj.white = opts.white;
             obj.gray = opts.gray;
-            obj.red = opts.gray;
+            obj.red = opts.red;
             obj.green = opts.green;
             obj.blue = opts.blue;
             obj.reversed = opts.reversed;
@@ -81,6 +81,10 @@ classdef PsychScreen
         
         function WipeScreen(obj)
             Screen('FillRect', obj.window, obj.background_colour);
+        end
+        
+        function FillScreen(obj, colour)
+            Screen('FillRect', obj.window, obj.(colour));
         end
         
         function out_time = FlipScreen(screen, flip_time)
