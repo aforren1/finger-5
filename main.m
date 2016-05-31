@@ -63,6 +63,8 @@ function output = main(tgt_path)
                                         'timing_tolerance', consts.timing_tolerance);
            resp_device.zero_baseline = Countdown(screen, resp_device);
         end
+        
+        WaitSecs(0.5); % breather before block starts
 		
 		% use the date in the filename to prevent overwrites
 		date_string = datestr(now, 30);

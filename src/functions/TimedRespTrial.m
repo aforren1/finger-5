@@ -12,7 +12,7 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	release_count = 1;
 	
 	updated_screen_press = zeros(1, length(resp_device.valid_indices));
-	num_frames = round(1.6/screen.ifi); 
+	num_frames = round(1.7/screen.ifi); 
 	first_screen_press = updated_screen_press;
 	Priority(screen.priority);
 	output.trial(ii).abs_time_on = GetSecs;
@@ -88,7 +88,7 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	Priority(0);
     StopKeyResponse(resp_device);
 
-	if 	isa(resp_device, 'ForceResponse')
+	if isa(resp_device, 'ForceResponse')
 	    [force_traces, timestamp] = CheckFullResponse(resp_device);	
 		% subtract the mean to center on zero
 		for nn = 1:size(force_traces, 1)		
