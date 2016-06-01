@@ -61,8 +61,8 @@ classdef PsychAudio
             PsychPortAudio('FillBuffer', aud_index, snd);
         end
         
-        function PlayAudio(obj, aud_index, time)
-            PsychPortAudio('Start', aud_index, 1, time, 0);
+        function out_time = PlayAudio(obj, aud_index, time)
+            out_time = PsychPortAudio('Start', aud_index, 1, time, 1);
         end
         
         function StopAudio(obj, aud_index)
