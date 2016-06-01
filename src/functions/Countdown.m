@@ -8,10 +8,10 @@ function zero_volts = Countdown(screen, resp_device)
     for current = 1:length_countdown
     
         if isa(resp_device, 'ForceResponse')
-            if length_countdown - current == start_zero
+            if length_countdown - current == stop_zero
                 StartKeyResponse(resp_device);
             
-            elseif length_countdown - current == stop_zero
+            elseif length_countdown - current == start_zero
                 StopKeyResponse(resp_device);
                 zero_volts = CheckFullResponse(resp_device);
                 zero_volts = mean(zero_volts, 1);           

@@ -1,6 +1,6 @@
 classdef ForceResponse
     properties
-        calibration;
+        valid_indices;
         zero_baseline; % from the countdown file
         force_min; % in newtons
         force_max;
@@ -26,7 +26,7 @@ classdef ForceResponse
             obj.timing_tolerance = opts.timing_tolerance;
             obj.force_min = opts.force_min;
             obj.force_max = opts.force_max;
-            obj.valid_indices = opts.valid_indices;
+            obj.valid_indices = valid_indices;
             
             daqreset;
             daqs = daqhwinfo('nidaq');
@@ -42,10 +42,10 @@ classdef ForceResponse
             
             temp_pos = [0 8 1 9 2 10 3 11 4 12]; % setup for nidaq
             valid_channels = temp_pos(valid_indices);
-            addchannel(dev.daq, valid_channels);
+            addchannel(obj.daq, valid_channels);
             dev.valid_indices = valid_indices;
             
-            set(obj.daq, 'SampleRate', sampling_freq);
+            set(obj.daq, 'SampleRate', opts.sampling_freq);
             set(obj.daq, 'SamplesPerTrigger', 4000);
             set(obj.daq, 'TriggerType', 'Manual');
             set(obj.daq, 'BufferingMode', 'Manual');
@@ -72,6 +72,7 @@ classdef ForceResponse
         end
         
         function [new_press, updated_screen_press, new_release] = CheckKeyResponse(obj, updated_screen_press)
+            new_screen_press = [];
             while(isempty(new_screen_press))
                 new_screen_press = getsample(obj.daq);
             end
@@ -92,7 +93,7 @@ classdef ForceResponse
                 press_index = -1;
                 time_press = -1;
             end
-            release_index = find(delta_press == -1);
+            release_index = obj.valid_indices(find(delta_press == -1));
             if isempty(release_index)
                 release_index = -1;
                 time_release = -1;
@@ -111,7 +112,7 @@ classdef ForceResponse
             if num_samples > 0
                 [force_traces, timestamp] = getdata(obj.daq, num_samples);
                 for ii = 1:size(force_traces, 1)
-                    force_traces(ii, :) = (force_traces(ii, :) - obj.zero_baseline).*obj.volts_2_newts;
+                    force_traces(ii, :) = (force_traces(ii, :) - obj.zero_baseline).*obj.volt_2_newts;
                 end
             else
                 error('Bad reading from board!')
