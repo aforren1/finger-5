@@ -91,10 +91,11 @@ function output = TimedRespTrial(screen, audio, images, resp_device, ...
 	if isa(resp_device, 'ForceResponse')
 	    [force_traces, timestamp] = CheckFullResponse(resp_device);	
 % 		% subtract the mean to center on zero
-% 		for nn = 1:size(force_traces, 1)		
-% 		    force_traces(nn, :) = force_traces(nn, :) - (sum(force_traces, 1)/size(force_traces, 1)); 
+% 		for nn = 1:size(force_traces, 1)
+%             for pp = 1:size(force_traces, 2)
+%  		        force_traces(nn, pp) = force_traces(nn, pp) - median(force_traces(:,pp)); 
+%             end
 %         end
-        
 		output.trial(ii).forces = [timestamp, force_traces]; % check dims!
     else
 		output.trial(ii).forces = []; % saves space
