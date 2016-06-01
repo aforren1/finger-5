@@ -12,7 +12,7 @@ function output = main(tgt_path)
         % boilerplate initialization
         consts = Constants;
         ui = UserInputs;
-        ui.keyboard_or_force = 0;
+        %ui.keyboard_or_force = 0;
         audio = PsychAudio(10);
         aud_dir = 'misc/sounds/';
         screen = PsychScreen('reversed', consts.reversed, 'big_screen', consts.big_screen, ...
