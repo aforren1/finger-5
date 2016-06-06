@@ -35,11 +35,29 @@ classdef SerialPort
         end
         
         function out = ReadSerial(obj)
+            % both return single line now, how to read until
+            % no new line?
             if obj.isoctave
-                out = char(srl_read(obj.serial, 1000));
+                out = ReadLine(obj);
             else
                 out = fscanf(obj.serial);
             end
+        end
+        
+        function out = ReadLine(obj)
+            not_done = true;
+            ii = 1;
+            int_array = uint8(1);
+            
+            while not_done
+                val = srl_read(obj.serial, 1);        
+                if val == 10 % newline
+                    not_done = false;
+                end        
+                int_array(ii) = val;
+                ii = ii + 1;
+            end
+            out = char(int_array);     
         end
         
         function WriteSerial(obj, to_write)
