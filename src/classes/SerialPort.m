@@ -1,7 +1,7 @@
 % wrapper for octave/matlab serial ports
 classdef SerialPort
     properties
-        serial;
+        serial_obj;
         isoctave;
         baud_rate;
         port;
@@ -21,17 +21,17 @@ classdef SerialPort
                 catch ME
                     error('Install instrument-control first!');
                 end
-                obj.serial = serial(port, opts.baud_rate);
-                set(obj.serial, 'timeout', 0.01); % in tenths of a sec??
+                obj.serial_obj = serial(port, opts.baud_rate);
+                set(obj.serial_obj, 'timeout', 0.01); % in tenths of a sec??
 
             else % on matlab
                 if ~usejava('jvm') % not using the jvm
                     error(['jvm required for matlab serial port.\n',...
                            'Run matlab without -nojvm flag']);   
                 end
-                obj.serial = serial(port, 'BaudRate', opts.baud_rate);
-                set(obj.serial, 'Timeout', 0.001); % 1 ms timeout
-                fopen(obj.serial);      
+                obj.serial_obj = serial(port, 'BaudRate', opts.baud_rate);
+                set(obj.serial_obj, 'Timeout', 0.001); % 1 ms timeout
+                fopen(obj.serial_obj);      
             end              
         end
         
@@ -41,7 +41,7 @@ classdef SerialPort
             if obj.isoctave
                 out = ReadLine(obj);
             else
-                out = fscanf(obj.serial);
+                out = fscanf(obj.serial_obj);
             end
             out = str2num(out); % limits to numbers only, but removes
                                 % repeated function calls
@@ -53,7 +53,7 @@ classdef SerialPort
             int_array = uint8(1);
             
             while not_done
-                val = srl_read(obj.serial, 1);        
+                val = srl_read(obj.serial_obj, 1);        
                 if val == 10 % newline
                     not_done = false;
                 end        
@@ -69,23 +69,23 @@ classdef SerialPort
             end
             
             if obj.isoctave
-                srl_write(obj.serial, to_write);
+                srl_write(obj.serial_obj, to_write);
             else
-                fprintf(obj.serial, to_write);
+                fprintf(obj.serial_obj, to_write);
             end
         end
         
         function FlushSerial(obj)
             if obj.isoctave
-                srl_flush(obj.serial);
+                srl_flush(obj.serial_obj);
             else
-                flushinput(obj.serial);
+                flushinput(obj.serial_obj);
             end
         
         end
         
         function CloseSerial(obj)      
-            fclose(obj.serial);
+            fclose(obj.serial_obj);
         end
     end
 
