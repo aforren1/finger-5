@@ -1,7 +1,8 @@
 % wrapper for octave/matlab serial ports
 classdef SerialPort
     properties
-        octave_or_matlab;
+        serial;
+        isoctave;
         baud_rate;
         port;
     end
@@ -12,6 +13,7 @@ classdef SerialPort
             isoctave = IsOctave;
             obj.isoctave = isoctave;
             obj.baud_rate = opts.baud_rate;
+            obj.port = port;
             
             if isoctave % on octave
                 try 
@@ -20,6 +22,7 @@ classdef SerialPort
                     error('Install instrument-control first!');
                 end
                 obj.serial = serial(port, opts.baud_rate);
+                srl_timeout(obj.serial, 1);
 
             else % on matlab
                 if ~usejava('jvm') % not using the jvm
@@ -33,7 +36,7 @@ classdef SerialPort
         
         function out = ReadSerial(obj)
             if obj.isoctave
-                out = char(srl_read(obj.serial));
+                out = char(srl_read(obj.serial, 1000));
             else
                 out = fscanf(obj.serial);
             end
@@ -53,7 +56,6 @@ classdef SerialPort
         
         function CloseSerial(obj)      
             fclose(obj.serial);
-            delete(obj.serial);          
         end
     end
 
