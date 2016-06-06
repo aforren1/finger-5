@@ -22,14 +22,15 @@ classdef SerialPort
                     error('Install instrument-control first!');
                 end
                 obj.serial = serial(port, opts.baud_rate);
-                srl_timeout(obj.serial, 1);
+                set(obj.serial, 'timeout', 0.1); % in tenths of a sec??
 
             else % on matlab
                 if ~usejava('jvm') % not using the jvm
                     error(['jvm required for matlab serial port.\n',...
                            'Run matlab without -nojvm flag']);   
                 end
-                obj.serial = serial(port, 'BaudRate', opts.baud_rate);   
+                obj.serial = serial(port, 'BaudRate', opts.baud_rate);
+                set(obj.serial, 'Timeout', 0.001); 
                 fopen(obj.serial);      
             end              
         end
@@ -70,6 +71,15 @@ classdef SerialPort
             else
                 fprintf(obj.serial, to_write);
             end
+        end
+        
+        function FlushSerial(obj)
+            if obj.isoctave
+                srl_flush(obj.serial);
+            else
+                flushinput(obj.serial);
+            end
+        
         end
         
         function CloseSerial(obj)      
