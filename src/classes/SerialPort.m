@@ -22,7 +22,7 @@ classdef SerialPort
                     error('Install instrument-control first!');
                 end
                 obj.serial = serial(port, opts.baud_rate);
-                set(obj.serial, 'timeout', 0.1); % in tenths of a sec??
+                set(obj.serial, 'timeout', 0.01); % in tenths of a sec??
 
             else % on matlab
                 if ~usejava('jvm') % not using the jvm
@@ -30,7 +30,7 @@ classdef SerialPort
                            'Run matlab without -nojvm flag']);   
                 end
                 obj.serial = serial(port, 'BaudRate', opts.baud_rate);
-                set(obj.serial, 'Timeout', 0.001); 
+                set(obj.serial, 'Timeout', 0.001); % 1 ms timeout
                 fopen(obj.serial);      
             end              
         end
@@ -43,6 +43,8 @@ classdef SerialPort
             else
                 out = fscanf(obj.serial);
             end
+            out = str2num(out); % limits to numbers only, but removes
+                                % repeated function calls
         end
         
         function out = ReadLine(obj)
