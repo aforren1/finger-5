@@ -87,8 +87,6 @@ classdef SerialPort
         function CloseSerial(obj)      
             fclose(obj.serial_obj);
         end
-    end
+    end % end methods
 
-
-
-end
+end % end classdef

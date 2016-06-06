@@ -9,7 +9,11 @@ classdef PsychImages
     methods
         function obj = PsychImages(n_images, varargin)
 		    if IsOctave
-                pkg load image % make sure we have imresize
+                try
+                    pkg load image % make sure we have imresize                    
+                catch ME
+                    error('install image from octave-forge first!');
+                end
             end
             opts = struct('reversed', false,...
                           'scale', 0.22);
