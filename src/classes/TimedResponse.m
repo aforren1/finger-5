@@ -12,20 +12,22 @@ classdef TimedResponse < Experiment
         end
 
         % load resources for this particular experiment
-        function LoadResources(obj)
+        function [consts, ui, audio, screen, tgt, out_data,...
+                 press_feedback, images, feedback_image,...
+                 resp_device] = LoadResources(obj)
 
         end
 
         % delegate
         function StateMachine(obj)
             switch State(obj.current_state)
-                case 'idle'
+                case 'idle' % between/before trials
 
-                case 'intrial'
+                case 'intrial' % during trial
 
-                case 'posttrial'
+                case 'posttrial' % after trial cleanup
 
-                case 'endblock'
+                case 'endblock' % after block cleanup
 
             end
 
@@ -36,15 +38,17 @@ classdef TimedResponse < Experiment
 
         end
 
-
+        % check inputs and serial port?
         function UpdateInput(obj, using_serial)
 
         end
 
+        % draw all screen-related things
         function UpdateDisplay(obj, display_flag)
 
         end
 
+        % play sound (if necessary)
         function UpdateSound(obj)
 
         end
