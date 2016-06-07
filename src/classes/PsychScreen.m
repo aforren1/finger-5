@@ -16,8 +16,8 @@ classdef PsychScreen
         priority; % highest priority possible for screen
         ifi; % interflip interval
     end % end properties
-    
-    methods    
+
+    methods
         function obj = PsychScreen(varargin)
         % Additional settings are `big_screen` and `skip_tests`
             AssertOpenGL;
@@ -33,7 +33,7 @@ classdef PsychScreen
                           'big_screen', false,...
                           'skip_tests', true);
             opts = CheckInputs(opts, varargin{:});
-            
+
             obj.black = opts.black;
             obj.white = opts.white;
             obj.gray = opts.gray;
@@ -41,12 +41,12 @@ classdef PsychScreen
             obj.green = opts.green;
             obj.blue = opts.blue;
             obj.reversed = opts.reversed;
-            
+
             if opts.skip_tests
                 Screen('Preference', 'SkipSyncTests', 1);
                 Screen('Preference', 'SuppressAllWarnings', 1);
             end
-            
+
             if opts.reversed
                 obj.background_colour = opts.white;
                 obj.text_colour = opts.black;
@@ -54,7 +54,7 @@ classdef PsychScreen
                 obj.background_colour = opts.black;
                 obj.text_colour = opts.white;
             end
-            
+
             if opts.big_screen % big screen
                 [obj.window, obj.dims] = Screen('OpenWindow', scrn_num,...
                                                  obj.background_colour);
@@ -63,36 +63,40 @@ classdef PsychScreen
                                                  obj.background_colour,...
                                                  [200 200 600 600]);
             end
-            
+
             [obj.center_x, obj.center_y] = RectCenter(obj.dims);
             obj.dims = obj.dims(3:4);
             Screen('BlendFunction', obj.window, ...
                    'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
             obj.priority = MaxPriority(obj.window);
             obj.ifi = Screen('GetFlipInterval', obj.window);
-            
+
         end % end PsychScreen
-        
+
         function obj = CloseScreen(obj)
         % Closes the PsychScreen object
             sca;
             obj = [];
         end % end CloseScreen
-        
+
         function WipeScreen(obj)
             Screen('FillRect', obj.window, obj.background_colour);
         end
-        
+
         function FillScreen(obj, colour)
             Screen('FillRect', obj.window, obj.(colour));
         end
-        
+
+        function ifi = Ifi(obj)
+            ifi = screen.ifi;
+        end
+
         function out_time = FlipScreen(screen, flip_time)
             if nargin < 2
                 flip_time = 0;
             end
             out_time = Screen('Flip', screen.window, flip_time);
         end
-  
+
     end % end methods
-end % end classdef   
+end % end classdef

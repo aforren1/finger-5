@@ -10,6 +10,10 @@ classdef Experiment
         function StateMachine(obj) end
         function UpdateDisplay(obj) end
         function UpdateInput(obj) end
+        function LoadTgt(obj) end
+        % these next two are not abstract,
+        % but the current format doesn't let
+        % us deliminate the two
         function output = State(obj)
             output = obj.current_state;
         end

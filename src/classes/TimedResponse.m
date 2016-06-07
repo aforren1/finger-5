@@ -1,10 +1,9 @@
 classdef TimedResponse < Experiment
 
     methods
-        function output = TimedResponse;
+        function output = TimedResponse
             output@Experiment;
-            output.valid_states = {'setup',...
-                                   'idle',...
+            output.valid_states = {'idle',...
                                    'intrial',...
                                    'posttrial',...
                                    'endblock'};
@@ -12,14 +11,15 @@ classdef TimedResponse < Experiment
         end
 
         % load resources for this particular experiment
-        function [consts, ui, audio, screen, tgt, out_data,...
-                 press_feedback, images, feedback_image,...
-                 resp_device] = LoadResources(obj)
+        % ones not contained in extra can change experiment by experiment
+        function [consts, ui, screen, tgt, out_data, extra] = LoadResources(obj)
+        % extra in this experiment: audio, images, press_feedback, feedback_image
+
 
         end
 
         % delegate
-        function StateMachine(obj)
+        function StateMachine(obj, consts, ui, screen, tgt, out_data, extra)
             switch State(obj.current_state)
                 case 'idle' % between/before trials
 
@@ -27,18 +27,18 @@ classdef TimedResponse < Experiment
 
                 case 'posttrial' % after trial cleanup
 
+                if trialnum >= max(tgt.trialnum) % check syntax!!
+                    obj.current_state = 'endblock';
+
+                end
                 case 'endblock' % after block cleanup
-
+                otherwise
+                    error('Unknown state');
             end
-
-        end
-
-        % figure out new state (need?)
-        function UpdateState(obj)
-
         end
 
         % check inputs and serial port?
+        % called regardless of the state
         function UpdateInput(obj, using_serial)
 
         end
