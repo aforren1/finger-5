@@ -12,7 +12,8 @@ classdef TimedResponse < Experiment
 
         % load resources for this particular experiment
         % ones not contained in extra can change experiment by experiment
-        function [consts, ui, screen, tgt, out_data, extra] = LoadResources(obj)
+        function [consts, ui, screen, tgt,...
+                  out_data, resp_device, extra] = LoadResources(obj)
         % extra in this experiment: audio, images, press_feedback, feedback_image
 
 
