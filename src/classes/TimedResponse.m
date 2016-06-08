@@ -1,6 +1,10 @@
 classdef TimedResponse < Experiment
+    properties
+        screen;
+    end
 
     methods
+        % too strong of a constructor?
         function output = TimedResponse
             output@Experiment;
             output.valid_states = {'idle',...
@@ -8,20 +12,23 @@ classdef TimedResponse < Experiment
                                    'posttrial',...
                                    'endblock'};
             output.current_state = 'idle';
+            consts = Constants();
+            output.screen = PsychScreen('reversed', consts.reversed,...
+                                        'big_screen', consts.big_screen, ...
+                                        'skip_tests', consts.skip_tests);
+            output.audio = PsychAudio(2);
+            FillAudio(output.audio, ['misc/sounds/', 'beepTrainFast.wav'], 1);
+            FillAudio(output.audio, ['misc/sounds/', 'smw_coin.wav'], 2);
+
         end
 
-        % load resources for this particular experiment
-        % ones not contained in extra can change experiment by experiment
-        function [consts, ui, screen, tgt,...
-                  out_data, resp_device, extra] = LoadResources(obj)
-        % extra in this experiment: audio, images, press_feedback, feedback_image
-
+        function out_tgt = LoadTgt(obj, tgt_path)
 
         end
 
         % delegate
-        function StateMachine(obj, consts, ui, screen, tgt, out_data, extra)
-            switch State(obj.current_state)
+        function StateMachine(o, consts, ui, screen, tgt, out_data, extra)
+            switch State(o.current_state)
                 case 'idle' % between/before trials
 
                 case 'intrial' % during trial
@@ -29,7 +36,7 @@ classdef TimedResponse < Experiment
                 case 'posttrial' % after trial cleanup
 
                 if trialnum >= max(tgt.trialnum) % check syntax!!
-                    obj.current_state = 'endblock';
+                    o.current_state = 'endblock';
 
                 end
                 case 'endblock' % after block cleanup
@@ -37,22 +44,5 @@ classdef TimedResponse < Experiment
                     error('Unknown state');
             end
         end
-
-        % check inputs and serial port?
-        % called regardless of the state
-        function UpdateInput(obj, using_serial)
-
-        end
-
-        % draw all screen-related things
-        function UpdateDisplay(obj, display_flag)
-
-        end
-
-        % play sound (if necessary)
-        function UpdateSound(obj)
-
-        end
-
     end % end methods
 end % end timed response
