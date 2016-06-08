@@ -1,33 +1,36 @@
 classdef TimedResponse < Experiment
     properties
         screen;
+        audio;
+        images;
+        x_image;
     end
 
     methods
         % too strong of a constructor?
-        function output = TimedResponse
-            output@Experiment;
-            output.valid_states = {'idle',...
+        function o = TimedResponse(tgt)
+            o@Experiment;
+            o.valid_states = {'idle',...
                                    'intrial',...
                                    'posttrial',...
                                    'endblock'};
-            output.current_state = 'idle';
+            o.current_state = 'idle';
             consts = Constants();
-            output.screen = PsychScreen('reversed', consts.reversed,...
+            o.screen = PsychScreen('reversed', consts.reversed,...
                                         'big_screen', consts.big_screen, ...
                                         'skip_tests', consts.skip_tests);
-            output.audio = PsychAudio(2);
-            FillAudio(output.audio, ['misc/sounds/', 'beepTrainFast.wav'], 1);
-            FillAudio(output.audio, ['misc/sounds/', 'smw_coin.wav'], 2);
+            o.audio = PsychAudio(2);
+            FillAudio(o.audio, ['misc/sounds/', 'beepTrainFast.wav'], 1);
+            FillAudio(o.audio, ['misc/sounds/', 'smw_coin.wav'], 2);
+            subdir = ifelse(tgt.image_type(1), 'shapes/', 'hands/');
+            img_dir = ['misc/images/', subdir];
+            img_names = dir([img_dir, '/*.jpg']);
 
-        end
-
-        function out_tgt = LoadTgt(obj, tgt_path)
-
+            o.x_image = ImageFeedback(o.screen.window, o.screen.dims(1));
         end
 
         % delegate
-        function StateMachine(o, consts, ui, screen, tgt, out_data, extra)
+        function out_data = StateMachine(o, tgt, out_data)
             switch State(o.current_state)
                 case 'idle' % between/before trials
 
@@ -45,4 +48,10 @@ classdef TimedResponse < Experiment
             end
         end
     end % end methods
+
+    methods (Static)
+        function out_tgt = LoadTgt(obj, tgt_path)
+
+        end
+    end
 end % end timed response

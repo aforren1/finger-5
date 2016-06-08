@@ -5,11 +5,8 @@ classdef Experiment
     end
 
     methods % (Abstract)
-        function LoadResources(obj) end
         function UpdateState(obj) end
         function StateMachine(obj) end
-        function UpdateDisplay(obj) end
-        function UpdateInput(obj) end
         function LoadTgt(obj) end
         % these next two are not abstract,
         % but the current format doesn't let
@@ -23,12 +20,12 @@ classdef Experiment
     end
 
     methods (Static)
-        function output = Factory(exp_type)
+        function output = Factory(exp_type, tgt)
             switch lower(exp_type)
                 case 'timed_response'
-                    output = TimedResponse;
+                    output = TimedResponse(tgt);
                 case 'serial'
-                    output = Serial;
+                    output = Serial(tgt);
                 otherwise
                     error('unknown experiment');
             end
