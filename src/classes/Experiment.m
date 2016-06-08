@@ -7,7 +7,6 @@ classdef Experiment
     methods % (Abstract)
         function UpdateState(obj) end
         function StateMachine(obj) end
-        function LoadTgt(obj) end
         % these next two are not abstract,
         % but the current format doesn't let
         % us deliminate the two
@@ -30,6 +29,7 @@ classdef Experiment
                     error('unknown experiment');
             end
         end
+        function LoadTgt(obj) end
 
     end
 
