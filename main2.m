@@ -2,7 +2,7 @@
 function out_data = main2(exp_type, tgt_path)
 
     try
-        tgt = Experiment.LoadTgt(tgt_path);
+        tgt = ParseTgt(tgt_path);
         exp = Experiment.Factory(exp_type);
 
         while State(exp) ~= 'endblock'

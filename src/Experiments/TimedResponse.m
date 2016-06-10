@@ -48,10 +48,4 @@ classdef TimedResponse < Experiment
             end
         end
     end % end methods
-
-    methods (Static)
-        function out_tgt = LoadTgt(obj, tgt_path)
-
-        end
-    end
 end % end timed response
