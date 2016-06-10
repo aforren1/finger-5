@@ -1,6 +1,6 @@
 function success = testPsychAudio
 
-addpath(genpath('src'))
+addpath(genpath('matlab'))
 
 try
    aud = PsychAudio(3);

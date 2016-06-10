@@ -1,7 +1,7 @@
 function success = testScreen()
 
 try
-    addpath(genpath('src'))
+    addpath(genpath('matlab'))
     scrn = PsychScreen();
     WaitSecs(1);
     scrn = CloseScreen(scrn);

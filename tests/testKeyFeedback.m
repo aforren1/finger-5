@@ -1,7 +1,7 @@
 function success = testKeyFeedback
 
 try
-    addpath(genpath('src'))
+    addpath(genpath('matlab'))
     scrn = PsychScreen();
     WaitSecs(1);
     fdbk = KeyFeedback(scrn.dims(1), scrn.dims(2), 'num_boxes', 6);

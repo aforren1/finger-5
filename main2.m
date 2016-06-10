@@ -2,6 +2,7 @@
 function out_data = main2(exp_type, tgt_path)
 
     try
+        addpath(genpath('matlab'));
         tgt = ParseTgt(tgt_path);
         exp = Experiment.Factory(exp_type);
 

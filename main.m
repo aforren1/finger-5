@@ -7,8 +7,8 @@ function output = main(tgt_path)
 	    HideCursor;
 		Screen('preference', 'verbosity', 1);
         warning('off', 'all');
-		addpath(genpath('src'));
-		
+		addpath(genpath('matlab'));
+
         % boilerplate initialization
         consts = Constants;
         ui = UserInputs;
@@ -18,7 +18,7 @@ function output = main(tgt_path)
         screen = PsychScreen('reversed', consts.reversed, 'big_screen', consts.big_screen, ...
                              'skip_tests', consts.skip_tests);
 		output = AllocateData; % allocates for one block
-		
+
         if nargin == 0
             tgt_path = ['misc/tfiles/', ui.tgt_name];
         end
@@ -33,7 +33,7 @@ function output = main(tgt_path)
         press_feedback = KeyFeedback(screen.dims(1), screen.dims(2),...
                               'num_boxes', length(unique(tgt.finger_index)));
 
-        
+
 		subdir = ifelse(tgt.image_type(1), 'shapes/', 'hands/');
         img_dir = ['misc/images/', subdir];
         img_names = dir([img_dir, '/*.jpg']);
@@ -42,12 +42,12 @@ function output = main(tgt_path)
                              'scale', consts.scale);
         feedback_image = ImageFeedback(screen.window, screen.dims(1));
 
-        
+
         for ii = 1:length(img_names)
             images = ImportImage(images, [img_dir, img_names(ii).name], ...
                                  ii, screen.window, screen.dims(1));
         end
-		
+
         valid_indices = unique(tgt.finger_index);
         if ui.keyboard_or_force
             resp_device = KeyboardResponse(valid_indices,...
@@ -64,26 +64,26 @@ function output = main(tgt_path)
                                         'timing_tolerance', consts.timing_tolerance);
            resp_device.zero_baseline = Countdown(screen, resp_device);
         end
-        
+
         WaitSecs(0.5); % breather before block starts
-		
+
 		% use the date in the filename to prevent overwrites
 		date_string = datestr(now, 30);
 		date_string = date_string(3:end - 2);
 		tfile_string = tgt_path((max(strfind(tgt_path, '/'))+1):end - 4);
 		filename = ['data/id', num2str(ui.subject_id), '_', tfile_string, ...
 		            '_', date_string, '.mat'];
-					
+
         if strfind(tgt_path, 'tr_')
             output.block_type = 'tr';
             FillAudio(audio, [aud_dir, 'beepTrainFast.wav'], 1);
             FillAudio(audio, [aud_dir, 'smw_coin.wav'], 2);
-			
+
 			for ii = 1:length(tgt.trial)
 			    output = TimedRespTrial(screen, audio, images, resp_device,...
                                         press_feedback, tgt, output, ii);
 			end
-            
+
         elseif strfind(tgt_path, 'rt_')
             cccombo = 0; % keep track of current streak
 			max_cccombo = 0; % keep track of max streak
@@ -95,32 +95,32 @@ function output = main(tgt_path)
             for ii = 1:length(aud_names)
                 FillAudio(audio, [aud_dir, aud_names(ii).name], ii+ 1);
             end
-            
+
 			for ii = 1:length(tgt.trial)
                 [output, cccombo, correct_counter] = RapidTrial(screen, audio, images, resp_device, ...
                                                press_feedback, tgt, output, cccombo, ii, correct_counter, ...
                                                feedback_image);
 			    max_cccombo = ifelse(cccombo > max_cccombo, cccombo, max_cccombo);
 			end
-			
+
 			final_time = GetSecs - tttime;
 			final_percent = correct_counter/length(tgt.trial);
             endstr = ['Final time: ', num2str(sprintf('%.2f',final_time)), ' seconds\n',...
                       'Percent correct: ', num2str(final_percent*100), '%\n',...
                       'Killing spree: ', num2str(max_cccombo)];
-                  
+
             DrawFormattedText(screen.window, endstr, 'center', 'center', screen.text_colour);
             FlipScreen(screen);
             WaitSecs(5);
         else
             error('unrecognized experiment');
         end % end trial calls
-        
+
 		% save data to mat file (and convert to flat?)
         % remove unused trials
         output.trial(structfind(output.trial, 'abs_time_on', -1)) = [];
         if ~exist('data', 'dir')
-           mkdir('data'); 
+           mkdir('data');
         end
 		if IsOctave
 		    save('-mat7-binary', filename, 'output');
@@ -128,7 +128,7 @@ function output = main(tgt_path)
 		    save(filename, 'output', '-v7');
 		end
 		PsychPurge;
-		
+
     catch err
         PsychPurge;
         rethrow(err);

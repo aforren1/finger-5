@@ -5,7 +5,7 @@ if ~ispc
 end
 
 try
-    addpath(genpath('src'))
+    addpath(genpath('matlab'))
     kbrd = ForceResponse(7:10);
     StartKeyResponse(kbrd);
     updated_screen_press = [0 0 0 0];

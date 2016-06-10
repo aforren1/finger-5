@@ -1,6 +1,6 @@
 function success = testImages
 
-addpath(genpath('src'))
+addpath(genpath('matlab'))
 
     try
         

@@ -1,7 +1,7 @@
 function success = testKeyboardResponse
 
 try
-    addpath(genpath('src')) 
+    addpath(genpath('matlab')) 
     kbrd = KeyboardResponse(7:10);
     StartKeyResponse(kbrd);
     time_ref = WaitSecs(2);
