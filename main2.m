@@ -1,10 +1,16 @@
 
-function out_data = main2(exp_type, tgt_path, use_serial)
+function out_data = main2(exp_type, use_serial)
 
     try
+        % get important functions into memory
+        WaitSecs(0.0001);
+        HideCursor;
         ref_time = GetSecs; % reference for the whole block
         addpath(genpath('matlab'));
-        tgt = ParseTgt(tgt_path);
+
+        % set up experiment
+        ui = UserInputs;
+        tgt = ParseTgt(ui.tgt_name);
         exp = Experiment.Factory(exp_type);
         if use_serial
             system('platformio run --target clean');

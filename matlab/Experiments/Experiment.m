@@ -29,7 +29,7 @@ classdef Experiment
                     error('unknown experiment');
             end
         end
-        function LoadTgt(obj) end
+        function UserInputs(obj) end
 
     end
 
