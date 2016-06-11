@@ -1,5 +1,5 @@
 
-[![Teensy Build Status](https://travis-ci.org/aforren1/finger-5.svg?branch=state_machine)](https://travis-ci.org/aforren1/finger-5)
+Teensy Build Status: [![Teensy Build Status](https://travis-ci.org/aforren1/finger-5.svg?branch=state_machine)](https://travis-ci.org/aforren1/finger-5)
 
 
 ## To Install:
