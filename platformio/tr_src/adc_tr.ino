@@ -1,3 +1,9 @@
+/*
+Prototypical arduino/teensy code.
+TODO: Pass number of analog channels at
+compile time?
+*/
+
 #include "ADC.h"
 #include "IntervalTimer.h"
 
