@@ -1,6 +1,10 @@
+
+[![Teensy Build Status](https://travis-ci.org/aforren1/finger-5.svg?branch=state_machine)](https://travis-ci.org/aforren1/finger-5)
+
+
 ## To Install:
 
-This is only guaranteed on Ubuntu 14.04 LTS with Octave 4.0.1, but 
+This is only guaranteed on Ubuntu 14.04 LTS with Octave 4.0.1, but
 MATLAB on any system should be fine.
 
 ### Install On Ubuntu With Octave/PTB-3
@@ -14,7 +18,7 @@ wget ftp://ftp.gnu.org/gnu/octave/octave-4.0.1.tar.gz
 tar xf octave-4.0.1.tar.gz
 cd octave-4.0.1/
 ./configure
-make 
+make
 sudo make install
 ```
 4.0.1 seemed necessary because 4.0.0 gave me issues with `classdef` and
@@ -38,4 +42,3 @@ These steps take a fair amount of time, so plan ahead!
 
 Should be the same as above, except sub in MATLAB installation for Octave installation.
 Will add more once I've tried it for myself.
-
