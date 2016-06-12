@@ -7,8 +7,11 @@ compile time?
 #include "ADC.h"
 #include "IntervalTimer.h"
 
+// only the line below needs to change for adding or removing channels
 const int channel_array[6] = {A0, A1, A2, A3, A4, A5};
-int value_array[6];
+
+const int array_size = sizeof(channel_array) / sizeof(int);
+int value_array[array_size];
 
 const unsigned long time_0 = millis();
 const int period_0 = 5000;
@@ -17,7 +20,7 @@ IntervalTimer timer_0;
 ADC *adc = new ADC();
 
 void setup() {
-  for(int ii = 0; ii < 6; ii++) {
+  for(int ii = 0; ii < array_size; ii++) {
     pinMode(channel_array[ii], INPUT);
   }
 
@@ -43,14 +46,14 @@ void timerCallback(void) {
 void loop() {
   bool go_flag_copy = false;
   go_flag = false;
-  for (int nn = 0; nn < 6; nn++) {
+  for (int nn = 0; nn < array_size; nn++) {
     value_array[nn] = adc->analogRead(channel_array[nn]);
   }
 
   Serial.print((long)(millis() - time_0));
   Serial.print("\t");
 
-  for (int nn = 0; nn < 6; nn++) {
+  for (int nn = 0; nn < array_size; nn++) {
     Serial.print(value_array[nn]);
     Serial.print("\t");
   }
