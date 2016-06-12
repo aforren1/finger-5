@@ -15,7 +15,8 @@ classdef UserInputs
             out.subject_id = input('What is the subject ID (numeric)? ');
             out.day = input('Which day is it (numeric, ie. 1 through 5)? ');
             out.block = input('Which block is it (numeric, ie. 1 through 10)? ');
-            out.exp_type = input('Expected experiment type? tr, rt...');
+            % check for valid experiment types?
+            out.exp_type = input('Expected experiment type? tr...', 's');
             out.use_serial = input('Use serial port? true or false. ');
             out.big_screen = false;
             out.keyboard_or_force = true;
