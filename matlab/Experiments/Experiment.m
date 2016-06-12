@@ -29,8 +29,6 @@ classdef Experiment
                     error('unknown experiment');
             end
         end
-        function UserInputs(obj) end
-
     end
 
 end

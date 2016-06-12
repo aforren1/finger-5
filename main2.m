@@ -1,5 +1,5 @@
 
-function out_data = main2(exp_type, use_serial)
+function out_data = main2
 
     try
         % get important functions into memory
@@ -13,9 +13,15 @@ function out_data = main2(exp_type, use_serial)
         tgt = ParseTgt(ui.tgt_name);
         exp = Experiment.Factory(exp_type);
         if use_serial
-            system('platformio run --target clean');
-            working_serial = ~system('platformio run -e teensy31');
-            working_serial = ~system('platformio run -e teensy31 --target upload');
+            if isunix
+                src_path = ['"$(pwd)/platformio/', ui.exp_type,'_src"'];
+            else
+                src_path = ['%cd%\platformio\', ui.exp_type, '_src'];
+            end
+            setenv('PLATFORMIO_SRC_DIR', src_path);
+            system('platformio run --target clean -v');
+            working_serial = ~system('platformio run -e teensy31 -v');
+            working_serial = ~system('platformio run -e teensy31 --target upload -v');
             if ~working_serial
                 warning('Teensy failed for some reason (printed above?)!');
                 warning('Will ignore the serial port in the experiment...');
