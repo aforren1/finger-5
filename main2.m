@@ -4,31 +4,18 @@ function out_data = main2
     try
         % get important functions into memory
         WaitSecs(0.0001);
-        HideCursor;
         ref_time = GetSecs; % reference for the whole block
+        HideCursor;
         addpath(genpath('matlab'));
 
         % set up experiment
         ui = UserInputs;
         tgt = ParseTgt(Tgt(ui), ',');
         exp = Experiment.Factory(Type(ui), tgt);
-
         if use_serial
-            if isunix
-                src_path = ['"$(pwd)/platformio/', ui.exp_type,'_src"'];
-            else
-                src_path = ['%cd%\platformio\', ui.exp_type, '_src'];
-            end
-            setenv('PLATFORMIO_SRC_DIR', src_path);
-            system('platformio run --target clean -v');
-            working_serial = ~system('platformio run -e teensy31 -v');
-            working_serial = ~system('platformio run -e teensy31 --target upload -v');
-            if ~working_serial
-                warning('Teensy failed for some reason (printed above?)!');
-                warning('Will ignore the serial port in the experiment...');
-            end
+            TeensySetupScript;
         end
-
+        
         while State(exp) ~= 'endblock'
             long_data = exp.UpdateInput(resp_device, working_serial);
 

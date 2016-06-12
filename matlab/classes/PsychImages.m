@@ -8,7 +8,7 @@ classdef PsychImages
     
     methods
         function obj = PsychImages(n_images, varargin)
-		    if IsOctave
+		    if logical(exist('OCTAVE_VERSION', 'builtin'));
                 try
                     pkg load image % make sure we have imresize                    
                 catch ME

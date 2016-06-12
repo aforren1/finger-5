@@ -10,7 +10,7 @@ classdef SerialPort
     methods
         function obj = SerialPort(port, varargin)
             opts = struct('baud_rate', 9600);
-            isoctave = IsOctave;
+            isoctave = logical(exist('OCTAVE_VERSION', 'builtin'));;
             obj.isoctave = isoctave;
             obj.baud_rate = opts.baud_rate;
             obj.port = port;

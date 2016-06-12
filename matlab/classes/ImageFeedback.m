@@ -7,7 +7,7 @@ classdef ImageFeedback
     
     methods
         function obj = ImageFeedback(scrn_handle, scrn_dims_x, varargin)
-            if IsOctave
+            if logical(exist('OCTAVE_VERSION', 'builtin'));
                 pkg load image;
             end
             opts = struct('scale', 0.35);
