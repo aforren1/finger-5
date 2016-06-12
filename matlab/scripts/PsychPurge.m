@@ -20,7 +20,7 @@ catch
 end
 
 try
-    if logical(exist('OCTAVE_VERSION', 'builtin'));
+    if logical(exist('OCTAVE_VERSION', 'builtin'))
         save('-mat7-binary', filename, 'output');
     else
         save(filename, 'output', '-v7');

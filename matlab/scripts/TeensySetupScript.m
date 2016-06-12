@@ -10,7 +10,7 @@ working_serial = ~system('platformio run -e teensy31 -v');
 working_serial = ~system('platformio run -e teensy31 --target upload -v');
 if working_serial
     % set up serial connection here
-    srl = SerialPort();
+    srl = SerialPort('/dev/ttyS0');
 else
     warning('Teensy failed for some reason (printed above?)!');
     warning('Will ignore the serial port in the experiment...');
