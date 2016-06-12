@@ -1,7 +1,5 @@
 /*
 Prototypical arduino/teensy code.
-TODO: Pass number of analog channels at
-compile time?
 */
 
 #include "ADC.h"
@@ -39,7 +37,7 @@ void setup() {
 
 volatile bool go_flag = false;
 
-void timerCallback(void) {
+FASTRUN void timerCallback(void) {
   go_flag = true;
 }
 
