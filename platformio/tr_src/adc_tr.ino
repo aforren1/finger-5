@@ -13,7 +13,7 @@ const int channel_array[6] = {A0, A1, A2, A3, A4, A5};
 const int array_size = sizeof(channel_array) / sizeof(int);
 int value_array[array_size];
 
-const unsigned long time_0 = millis();
+elapsedMillis current_time;
 const int period_0 = 5000;
 IntervalTimer timer_0;
 
@@ -50,7 +50,7 @@ void loop() {
     value_array[nn] = adc->analogRead(channel_array[nn]);
   }
 
-  Serial.print((long)(millis() - time_0));
+  Serial.print(current_time);
   Serial.print("\t");
 
   for (int nn = 0; nn < array_size; nn++) {
@@ -58,7 +58,7 @@ void loop() {
     Serial.print("\t");
   }
   Serial.print("\n");
-  
+
   while(!go_flag_copy) {
     noInterrupts();
     go_flag_copy = go_flag;
