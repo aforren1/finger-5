@@ -21,10 +21,10 @@ classdef Experiment
     methods (Static)
         function output = Factory(exp_type, tgt)
             switch lower(exp_type)
-                case 'timed_response'
+                case 'tr'
                     output = TimedResponse(tgt);
-                case 'serial'
-                    output = Serial(tgt);
+                case 'rt'
+                    output = ReactionTime(tgt);
                 otherwise
                     error('unknown experiment');
             end

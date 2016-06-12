@@ -10,8 +10,9 @@ function out_data = main2
 
         % set up experiment
         ui = UserInputs;
-        tgt = ParseTgt(ui.tgt_name);
-        exp = Experiment.Factory(exp_type);
+        tgt = ParseTgt(Tgt(ui), ',');
+        exp = Experiment.Factory(Type(ui), tgt);
+
         if use_serial
             if isunix
                 src_path = ['"$(pwd)/platformio/', ui.exp_type,'_src"'];

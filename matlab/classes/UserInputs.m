@@ -16,7 +16,7 @@ classdef UserInputs
             out.day = input('Which day is it (numeric, ie. 1 through 5)? ');
             out.block = input('Which block is it (numeric, ie. 1 through 10)? ');
             % check for valid experiment types?
-            out.exp_type = input('Expected experiment type? tr...', 's');
+            out.exp_type = input('Expected experiment type? tr... (no quotes): ', 's');
             out.use_serial = input('Use serial port? true or false. ');
             out.big_screen = false;
             out.keyboard_or_force = true;
@@ -28,7 +28,7 @@ classdef UserInputs
                 tfiles = dir(fullfile('misc/tfiles/', '*.tgt'));
                 tfiles = {tfiles.name}';
                 index = find(cellfun('length', ...
-                            regexp(tfiles, [ui.exp_type, '_dy', num2str(ui.day), '_bk', num2str(ui.block), '_'])));
+                            regexp(tfiles, [ui.exp_type, '_dy', num2str(ui.day), '_bk', num2str(ui.block)])));
                 if isempty(index)
                     warning('No matching target file!');
                     out = -1;
@@ -40,6 +40,14 @@ classdef UserInputs
                 out = -1;
             end
 
+        end
+
+        function out = Tgt(ui)
+            out = ui.tgt_name;
+        end
+
+        function out = Type(ui)
+            out = ui.exp_type;
         end
     end
 end
