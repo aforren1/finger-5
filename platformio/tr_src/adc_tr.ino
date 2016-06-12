@@ -41,7 +41,7 @@ FASTRUN void timerCallback(void) {
   go_flag = true;
 }
 
-void loop() {
+FASTRUN void loop() {
   bool go_flag_copy = false;
   go_flag = false;
   for (int nn = 0; nn < array_size; nn++) {
