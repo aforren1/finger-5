@@ -10,7 +10,7 @@ compile time?
 const int channel_array[6] = {A0, A1, A2, A3, A4, A5};
 int value_array[6];
 
-const int time_0 = millis();
+const unsigned long time_0 = millis();
 const int period_0 = 5000;
 IntervalTimer timer_0;
 
@@ -47,7 +47,7 @@ void loop() {
     value_array[nn] = adc->analogRead(channel_array[nn]);
   }
 
-  Serial.print(millis() - time_0);
+  Serial.print((long)(millis() - time_0));
   Serial.print("\t");
 
   for (int nn = 0; nn < 6; nn++) {
