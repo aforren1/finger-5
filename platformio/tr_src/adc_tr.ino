@@ -5,14 +5,16 @@ Prototypical arduino/teensy code.
 #include "ADC.h"
 #include "IntervalTimer.h"
 
-// only the line below needs to change for adding or removing channels
+// only the lines below needs to change
+// first line does which analog channels to read,
+// second line sets the sampling interval (in microseconds)
 const int channel_array[6] = {A0, A1, A2, A3, A4, A5};
+const int period_0 = 2000;
 
 const int array_size = sizeof(channel_array) / sizeof(int);
 int value_array[array_size];
 
-elapsedMillis current_time;
-const int period_0 = 5000;
+elapsedMicros current_time;
 IntervalTimer timer_0;
 
 ADC *adc = new ADC();
@@ -27,10 +29,10 @@ void setup() {
 
   adc->setReference(ADC_REF_3V3, ADC_0);
   adc->setAveraging(8);
-  adc->setResolution(12);
+  adc->setResolution(16);
   adc->setConversionSpeed(ADC_HIGH_SPEED);
   adc->setSamplingSpeed(ADC_HIGH_SPEED);
-  timer_0.priority(10);
+  timer_0.priority(0);
   timer_0.begin(timerCallback, period_0);
   delay(500);
 }
@@ -41,7 +43,7 @@ FASTRUN void timerCallback(void) {
   go_flag = true;
 }
 
-FASTRUN void loop() {
+void loop() {
   bool go_flag_copy = false;
   go_flag = false;
   for (int nn = 0; nn < array_size; nn++) {
@@ -55,6 +57,7 @@ FASTRUN void loop() {
     Serial.print(value_array[nn]);
     Serial.print("\t");
   }
+  Serial.print(current_time);
   Serial.print("\n");
 
   while(!go_flag_copy) {
