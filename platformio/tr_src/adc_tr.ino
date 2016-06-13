@@ -13,6 +13,7 @@ const unsigned long period_0 = 100000;
 
 const unsigned int array_size = sizeof(channel_array) / sizeof(int);
 unsigned int value_array[array_size];
+unsigned int ii;
 
 elapsedMicros current_time;
 IntervalTimer timer_0;
@@ -20,7 +21,7 @@ IntervalTimer timer_0;
 ADC *adc = new ADC();
 
 void setup() {
-  for(unsigned int ii = 0; ii < array_size; ii++) {
+  for(ii = 0; ii < array_size; ii++) {
     pinMode(channel_array[ii], INPUT);
   }
 
@@ -55,7 +56,7 @@ void loop() {
   go_flag = false;
 
 
-  for (unsigned int nn = 0; nn < array_size; nn++) {
+  for (ii = 0; ii < array_size; ii++) {
     value_array[nn] = adc->analogRead(channel_array[nn]);
   }
 
@@ -65,7 +66,7 @@ void loop() {
   Serial.print(current_time);
   Serial.print("\t");
 
-  for (unsigned int nn = 0; nn < array_size; nn++) {
+  for (ii = 0; ii < array_size; ii++) {
     Serial.print(value_array[nn]);
     Serial.print("\t");
   }
