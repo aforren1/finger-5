@@ -9,7 +9,7 @@ Prototypical arduino/teensy code.
 // first line does which analog channels to read,
 // second line sets the sampling interval (in microseconds)
 const unsigned int channel_array[6] = {A0, A1, A2, A3, A4, A5};
-const unsigned long period_0 = 100000;
+const unsigned long period_0 = 5000;
 
 const unsigned int array_size = sizeof(channel_array) / sizeof(int);
 unsigned int value_array[array_size];
@@ -57,7 +57,7 @@ void loop() {
 
 
   for (ii = 0; ii < array_size; ii++) {
-    value_array[nn] = adc->analogRead(channel_array[nn]);
+    value_array[ii] = adc->analogRead(channel_array[ii]);
   }
 
   // if s is missing, incomplete line!
@@ -67,7 +67,7 @@ void loop() {
   Serial.print("\t");
 
   for (ii = 0; ii < array_size; ii++) {
-    Serial.print(value_array[nn]);
+    Serial.print(value_array[ii]);
     Serial.print("\t");
   }
   //Serial.print(current_time);
