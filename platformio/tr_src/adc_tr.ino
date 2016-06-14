@@ -1,5 +1,6 @@
 /*
 Prototypical arduino/teensy code.
+TODO: prepend zeros to outputs to make lines identical?
 */
 
 #include "ADC.h"

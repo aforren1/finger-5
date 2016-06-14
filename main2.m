@@ -1,5 +1,5 @@
 
-function out_data = main2
+function out_data = main2(tgt_name)
 
     try
         % get important functions into memory
@@ -10,14 +10,21 @@ function out_data = main2
 
         % set up experiment
         ui = UserInputs;
+        % hack to override the tgt selection
+        if nargin == 1
+            ui.tgt = ['misc/tfiles/', tgt_name];
+            tmp = strsplit(tgt_name, '_');
+            ui.exp_type = tmp{1};
+        end
         tgt = ParseTgt(Tgt(ui), ',');
+
         exp = Experiment.Factory(Type(ui), tgt);
         if use_serial
             TeensySetupScript;
         end
-        
+
         while State(exp) ~= 'endblock'
-            long_data = exp.UpdateInput(resp_device, working_serial);
+            long_data = exp.UpdateInput(exp.resp_device);
 
             [exp, out_data] = exp.StateMachine(tgt, out_data);
             % lock to the refresh rate of the screen
