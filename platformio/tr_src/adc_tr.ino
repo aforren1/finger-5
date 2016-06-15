@@ -9,7 +9,7 @@ TODO: prepend zeros to outputs to make lines identical?
 // only the lines below needs to change
 // first line does which analog channels to read,
 // second line sets the sampling interval (in microseconds)
-const unsigned int channel_array[6] = {A0, A1, A2, A3, A4, A5};
+const unsigned int channel_array[2] = {A0, A7};
 const unsigned long period_0 = 5000;
 
 const unsigned int array_size = sizeof(channel_array) / sizeof(int);
@@ -62,16 +62,16 @@ void loop() {
   }
 
   // if s is missing, incomplete line!
-  Serial.print("s");
-  Serial.print("\t");
-  Serial.print(current_time);
-  Serial.print("\t");
+  //Serial.print("s");
+  //Serial.print("\t");
+  //Serial.print(current_time);
+  //Serial.print("\t");
 
   for (ii = 0; ii < array_size; ii++) {
     Serial.print(value_array[ii]);
     Serial.print("\t");
   }
   //Serial.print(current_time);
-  Serial.print("\n");
+  Serial.println();
 
 }
