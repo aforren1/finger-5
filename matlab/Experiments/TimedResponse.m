@@ -33,8 +33,8 @@ classdef TimedResponse < Experiment
 
             % audio
             o.audio = BlamAudio;
-            FillAudio(o.audio, ['misc/sounds/', 'beepTrainFast.wav'], 1);
-            FillAudio(o.audio, ['misc/sounds/', 'smw_coin.wav'], 2);
+            o.audio.FillAudio(['misc/sounds/', 'beepTrainFast.wav'], 1, 0);
+            o.audio.FillAudio(['misc/sounds/', 'smw_coin.wav'], 2, 0);
 
             %images
             subdir = ifelse(tgt.image_type(1), 'shapes/', 'hands/');
@@ -44,7 +44,7 @@ classdef TimedResponse < Experiment
                                    'reversed', consts.reversed,...
                                    'scale', consts.scale);
             for ii = 1:length(img_names)
-                o.images = ImportImage(o.images, [img_dir, img_names(ii).name], ...
+                o.images = o.images.ImportImage([img_dir, img_names(ii).name], ...
                                        ii, o.screen.window, o.screen.dims(1));
             end
 
