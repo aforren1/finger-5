@@ -63,7 +63,11 @@ classdef BlamAudio
 					snd = [snd; snd];
 				end
 
-			elseif mono_stereo == 1	|| mono_stereo == 2		
+			elseif mono_stereo == 1	|| mono_stereo == 2
+                if size(snd, 1) > 1
+                     warning('Shoving a stereo sound into mono, be aware!');
+                     snd = snd(:, 1) + snd(:, 2);
+                end				 
 				obj.sound_handle(aud_index) = PsychPortAudio('OpenSlave', obj.pamaster, 1, 1, mono_stereo);
 			else
 			    error('Unrecognized setting for audio channel')
