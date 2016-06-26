@@ -1,5 +1,5 @@
 % wrapper for octave/matlab serial ports
-classdef SerialPort
+classdef BlamSerial
     properties
         serial_obj;
         isoctave;
@@ -8,10 +8,9 @@ classdef SerialPort
     end
 
     methods
-        function obj = SerialPort(port, varargin)
+        function obj = BlamSerial(port, varargin)
             opts = struct('baud_rate', 9600);
-            isoctave = logical(exist('OCTAVE_VERSION', 'builtin'));
-            obj.isoctave = isoctave;
+            obj.isoctave = IsOctave;
             obj.baud_rate = opts.baud_rate;
             obj.port = port;
 

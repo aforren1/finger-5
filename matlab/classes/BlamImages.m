@@ -1,4 +1,4 @@
-classdef PsychImages
+classdef BlamImages
     properties
         raw_images; % 1xn cell array of raw images 
         ptb_images; % 1xn matrix of psychtoolbox handles
@@ -7,8 +7,8 @@ classdef PsychImages
     end
     
     methods
-        function obj = PsychImages(n_images, varargin)
-		    if logical(exist('OCTAVE_VERSION', 'builtin'))
+        function obj = BlamImages(n_images, varargin)
+		    if IsOctave
                 try
                     pkg load image % make sure we have imresize                    
                 catch ME

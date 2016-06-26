@@ -4,8 +4,8 @@ addpath(genpath('matlab'))
 
     try
         
-        scrn = PsychScreen;
-        imgs = PsychImages(3, 'scale', 0.8, 'reversed', true);
+        scrn = BlamScreen;
+        imgs = BlamImages(3, 'scale', 0.8, 'reversed', true);
         imgs = ImportImage(imgs, 'misc/images/hands/da.jpg', 1, scrn.window, scrn.dims(1));
         imgs = ImportImage(imgs, 'misc/images/shapes/dd.jpg', 2, scrn.window, scrn.dims(1));
         

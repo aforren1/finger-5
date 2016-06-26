@@ -2,7 +2,7 @@ function success = testKeyFeedback
 
 try
     addpath(genpath('matlab'))
-    scrn = PsychScreen();
+    scrn = BlamScreen();
     WaitSecs(1);
     fdbk = KeyFeedback(scrn.dims(1), scrn.dims(2), 'num_boxes', 6);
     DrawOutline(fdbk, scrn.window);
@@ -10,7 +10,7 @@ try
     Screen('Flip', scrn.window);
     WaitSecs(1);
     scrn = CloseScreen(scrn);
-    scrn = PsychScreen('reversed', true);
+    scrn = BlamScreen('reversed', true);
     fdbk = KeyFeedback(scrn.dims(1), scrn.dims(2), 'num_boxes', 4, 'reversed', true);
     DrawOutline(fdbk, scrn.window);
     DrawFill(fdbk, scrn.window, 'red', [0 1 0], .3);

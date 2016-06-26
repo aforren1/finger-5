@@ -7,6 +7,8 @@ classdef Experiment
     methods % (Abstract)
         function UpdateState(obj) end
         function StateMachine(obj) end
+		function AllocateData(obj) end
+		function Constants(obj) end
         % these next two are not abstract,
         % but the current format doesn't let
         % us deliminate the two

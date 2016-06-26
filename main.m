@@ -15,7 +15,7 @@ function output = main(tgt_path)
         %ui.keyboard_or_force = 0;
         audio = PsychAudio(10);
         aud_dir = 'misc/sounds/';
-        screen = PsychScreen('reversed', consts.reversed, 'big_screen', consts.big_screen, ...
+        screen = BlamScreen('reversed', consts.reversed, 'big_screen', consts.big_screen, ...
                              'skip_tests', consts.skip_tests);
 		output = AllocateData; % allocates for one block
 
@@ -37,7 +37,7 @@ function output = main(tgt_path)
 		subdir = ifelse(tgt.image_type(1), 'shapes/', 'hands/');
         img_dir = ['misc/images/', subdir];
         img_names = dir([img_dir, '/*.jpg']);
-        images = PsychImages(length(img_names),...
+        images = BlamImages(length(img_names),...
                              'reversed', consts.reversed,...
                              'scale', consts.scale);
         feedback_image = ImageFeedback(screen.window, screen.dims(1));
@@ -122,7 +122,7 @@ function output = main(tgt_path)
         if ~exist('data', 'dir')
            mkdir('data');
         end
-		if logical(exist('OCTAVE_VERSION', 'builtin'))
+		if IsOctave
 		    save('-mat7-binary', filename, 'output');
 		else
 		    save(filename, 'output', '-v7');

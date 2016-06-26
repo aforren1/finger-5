@@ -7,6 +7,18 @@ classdef TimedResponse < Experiment
     end
 
     methods
+	    function consts = Constants
+		    consts.timing_tolerance = 0.075;
+			consts.possible_keys =  {{'a','w','e','f','v','b','h','u','i','l'}};
+			consts.force_min = 1;
+			consts.force_max = 5;
+			consts.sampling_freq = 200;
+			consts.reversed = false;
+			consts.big_screen = false;
+			consts.skip_tests = true;
+			consts.scale = 0.22;
+		end
+		
         function o = TimedResponse(tgt)
             o@Experiment;
             o.valid_states = {'idle',...
@@ -14,13 +26,13 @@ classdef TimedResponse < Experiment
                               'posttrial',...
                               'endblock'};
             o.current_state = 'idle';
-            consts = Constants();
-            o.screen = PsychScreen('reversed', consts.reversed,...
+            consts = o.Constants;
+            o.screen = BlamScreen('reversed', consts.reversed,...
                                         'big_screen', consts.big_screen, ...
                                         'skip_tests', consts.skip_tests);
 
             % audio
-            o.audio = PsychAudio(2);
+            o.audio = BlamAudio;
             FillAudio(o.audio, ['misc/sounds/', 'beepTrainFast.wav'], 1);
             FillAudio(o.audio, ['misc/sounds/', 'smw_coin.wav'], 2);
 
@@ -28,7 +40,7 @@ classdef TimedResponse < Experiment
             subdir = ifelse(tgt.image_type(1), 'shapes/', 'hands/');
             img_dir = ['misc/images/', subdir];
             img_names = dir([img_dir, '/*.jpg']);
-            o.images = PsychImages(length(img_names),...
+            o.images = BlamImages(length(img_names),...
                                    'reversed', consts.reversed,...
                                    'scale', consts.scale);
             for ii = 1:length(img_names)
@@ -70,7 +82,7 @@ classdef TimedResponse < Experiment
 
                 case 'posttrial' % after trial cleanup
 
-                if trialnum >= max(tgt.trialnum) % check syntax!!
+                if trialnum >= max(tgt.trial)
                     o.current_state = 'endblock';
 
                 end
@@ -79,5 +91,10 @@ classdef TimedResponse < Experiment
                     error('Unknown state');
             end
         end
+		
+		% allocate arrays for summary data and complete data for the entire block
+	    function [summary_data, full_data] = AllocateData(o, tgt)
+	        % do we want a struct (for the names) or a matrix (and keep track of columns)?
+	    end
     end % end methods
 end % end timed response

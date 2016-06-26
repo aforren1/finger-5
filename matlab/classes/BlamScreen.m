@@ -1,4 +1,4 @@
-classdef PsychScreen
+classdef BlamScreen
     properties
         black;
         white;
@@ -18,7 +18,7 @@ classdef PsychScreen
     end % end properties
 
     methods
-        function obj = PsychScreen(varargin)
+        function obj = BlamScreen(varargin)
         % Additional settings are `big_screen` and `skip_tests`
             AssertOpenGL;
             screens = Screen('Screens');
@@ -71,10 +71,10 @@ classdef PsychScreen
             obj.priority = MaxPriority(obj.window);
             obj.ifi = Screen('GetFlipInterval', obj.window);
 
-        end % end PsychScreen
+        end % end BlamScreen
 
         function obj = CloseScreen(obj)
-        % Closes the PsychScreen object
+        % Closes the BlamScreen object
             sca;
             obj = [];
         end % end CloseScreen

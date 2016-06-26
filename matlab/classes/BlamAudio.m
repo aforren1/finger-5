@@ -1,4 +1,4 @@
-classdef PsychAudio
+classdef BlamAudio
 
     properties
         pamaster;
@@ -7,7 +7,7 @@ classdef PsychAudio
     end
     
     methods
-        function obj = PsychAudio(n_channels)
+        function obj = BlamAudio
             try PsychPortAudio('Close');
             catch
                 warning('No active audio device')
@@ -17,7 +17,7 @@ classdef PsychAudio
             % set sound reading function
             % octave classes and function handles are weird for now, so wait
             % until FillAudio to figure out the *actual* function
-            if logical(exist('OCTAVE_VERSION', 'builtin')) || verLessThan('matlab', '8')
+            if IsOctave || verLessThan('matlab', '8')
                 obj.which_audio_fun = 'wavread';
             else
                 obj.which_audio_fun = 'audioread';
@@ -26,16 +26,16 @@ classdef PsychAudio
             % open in master mode with low latency (other audio devs may fail)
             obj.pamaster = PsychPortAudio('Open', [], 9, 2, 44100, 2);
             PsychPortAudio('Start', obj.pamaster, 0, 0, 1);
-            obj.sound_handle = zeros(1, n_channels);
-            for ii = 1:n_channels
-                obj.sound_handle(ii) = PsychPortAudio('OpenSlave', obj.pamaster, 1);
-            end
+            obj.sound_handle = zeros(1, 1000);
         end % end constructor
         
-        function FillAudio(obj, file_or_matrix, aud_index)
-        % obj is the object of PsychAudio class 
+        function FillAudio(obj, file_or_matrix, aud_index, mono_stereo)
+        % obj is the object of BlamAudio class 
         % file_or_matrix is the complete path to the audio file (or an existing matrix)
         % aud_index is the index of the slave to fill
+		% if mono_stereo = 0, then stereo
+		% if mono_stereo = 1, then left
+		% if = 2, then right
             if ischar(file_or_matrix)
                 if strcmpi(obj.which_audio_fun, 'wavread')
                     audio_fun = @wavread;
@@ -50,13 +50,25 @@ classdef PsychAudio
             else
                 error('No recognized type for file_or_matrix')
             end
-            % looking for a 2xn matrix, duplicate channel if mono          
-            if size(snd, 1) > size(snd, 2)
+			
+			% make sure matrix is oriented correctly
+			if size(snd, 1) > size(snd, 2)
                 snd = snd';
             end
-            if size(snd, 1) < 2
-                snd = [snd; snd];
-            end
+			
+			if mono_stereo == 0
+			    obj.sound_handle(aud_index) = PsychPortAudio('OpenSlave', obj.pamaster, 1);
+				% looking for a 2xn matrix, duplicate channel if mono    		
+				if size(snd, 1) < 2
+					snd = [snd; snd];
+				end
+
+			elseif mono_stereo == 1	|| mono_stereo == 2		
+				obj.sound_handle(aud_index) = PsychPortAudio('OpenSlave', obj.pamaster, 1, 1, mono_stereo);
+			else
+			    error('Unrecognized setting for audio channel')
+		    end
+			
             PsychPortAudio('CreateBuffer', aud_index, snd);
             PsychPortAudio('FillBuffer', aud_index, snd);
         end

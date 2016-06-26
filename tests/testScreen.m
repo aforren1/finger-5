@@ -2,10 +2,10 @@ function success = testScreen()
 
 try
     addpath(genpath('matlab'))
-    scrn = PsychScreen();
+    scrn = BlamScreen();
     WaitSecs(1);
     scrn = CloseScreen(scrn);
-    scrn = PsychScreen('reversed', true);
+    scrn = BlamScreen('reversed', true);
     WaitSecs(1);
     scrn = CloseScreen(scrn);
     success = 0;
