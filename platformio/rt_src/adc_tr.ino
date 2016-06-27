@@ -1,33 +1,30 @@
 /*
 Prototypical arduino/teensy code.
-TODO: Pass number of analog channels at
-compile time?
+TODO: prepend zeros to outputs to make lines identical?
 */
 
 #include "ADC.h"
 #include "IntervalTimer.h"
 
-const int analog_0 = A0;
-const int analog_1 = A1;
-const int analog_2 = A2;
-const int analog_3 = A3;
-const int analog_4 = A4;
-const int analog_5 = A5;
+// only the lines below needs to change
+// first line does which analog channels to read,
+// second line sets the sampling interval (in microseconds)
+const unsigned int channel_array[2] = {A0, A7};
+const unsigned long period_0 = 5000;
 
-const int period_0 = 5000;
+const unsigned int array_size = sizeof(channel_array) / sizeof(int);
+unsigned int value_array[array_size];
+unsigned int ii;
 
+elapsedMicros current_time;
 IntervalTimer timer_0;
-int value_0, value_1, value_2, value_3, value_4, value_5;
 
 ADC *adc = new ADC();
 
 void setup() {
-  pinMode(analog_0, INPUT);
-  pinMode(analog_1, INPUT);
-  pinMode(analog_2, INPUT);
-  pinMode(analog_3, INPUT);
-  pinMode(analog_4, INPUT);
-  pinMode(analog_5, INPUT);
+  for(ii = 0; ii < array_size; ii++) {
+    pinMode(channel_array[ii], INPUT);
+  }
 
   Serial.begin(9600);
   delay(1000);
@@ -43,43 +40,38 @@ void setup() {
 }
 
 volatile bool go_flag = false;
+bool go_flag_copy = false;
 
-void timerCallback(void) {
+FASTRUN void timerCallback(void) {
   go_flag = true;
 }
 
 void loop() {
-  Serial.print(millis());
-  bool go_flag_copy = false;
-  go_flag = false;
-  value_0 = adc->analogRead(analog_0);
-  value_1 = adc->analogRead(analog_1);
-  value_2 = adc->analogRead(analog_2);
-  value_3 = adc->analogRead(analog_3);
-  value_4 = adc->analogRead(analog_4);
-  value_5 = adc->analogRead(analog_5);
-  //*3.3/adc->getMaxValue(ADC_0)
-  Serial.print("\t");
-  Serial.print(value_0);
-  Serial.print("\t");
-
-  Serial.print(value_1);
-  Serial.print("\t");
-
-  Serial.print(value_2);
-  Serial.print("\t");
-
-  Serial.print(value_3);
-  Serial.print("\t");
-
-  Serial.print(value_4);
-  Serial.print("\t");
-
-  Serial.println(value_5);
 
   while(!go_flag_copy) {
     noInterrupts();
     go_flag_copy = go_flag;
     interrupts();
   }
+  go_flag_copy = false;
+  go_flag = false;
+
+
+  for (ii = 0; ii < array_size; ii++) {
+    value_array[ii] = adc->analogRead(channel_array[ii]);
+  }
+
+  // if s is missing, incomplete line!
+  //Serial.print("s");
+  //Serial.print("\t");
+  Serial.print(current_time);
+  Serial.print("\t");
+
+  for (ii = 0; ii < array_size; ii++) {
+    Serial.print(value_array[ii]);
+    Serial.print("\t");
+  }
+  //Serial.print(current_time);
+  Serial.println();
+
 }
