@@ -79,5 +79,18 @@ classdef TimedResponse < Experiment
                     error('Unknown state');
             end
         end
+
+        function consts = MakeConstants(o)
+            consts.timing_tolerance = 0.075;
+            consts.possible_keys =  {{'a','w','e','f','v','b','h','u','i','l'}};
+            consts.force_min = 1;
+            consts.force_max = 5;
+            consts.sampling_freq = 200;
+            consts.reversed = false;
+            consts.big_screen = true;
+            consts.skip_tests = true;
+        	consts.scale = 0.22;
+            consts.serialport = '/dev/ttyACM0';
+        end
     end % end methods
 end % end timed response

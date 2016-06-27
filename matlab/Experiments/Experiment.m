@@ -5,8 +5,8 @@ classdef Experiment
     end
 
     methods % (Abstract)
-        function UpdateState(obj) end
         function StateMachine(obj) end
+        function MakeConstants(obj) end
         % these next two are not abstract,
         % but the current format doesn't let
         % us deliminate the two
