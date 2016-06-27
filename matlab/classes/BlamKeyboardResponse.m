@@ -1,4 +1,4 @@
-classdef KeyboardResponse
+classdef BlamKeyboardResponse
     properties
         timing_tolerance;
         valid_indices;
@@ -8,7 +8,7 @@ classdef KeyboardResponse
     end
     
     methods
-        function obj = KeyboardResponse(valid_indices, varargin)
+        function obj = BlamKeyboardResponse(valid_indices, varargin)
             if ~exist('valid_indices', 'var')
                 error('Need valid indices!');
             end

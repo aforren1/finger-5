@@ -1,4 +1,4 @@
-classdef ForceResponse
+classdef BlamForceResponse
     properties
         valid_indices;
         zero_baseline; % from the countdown file
@@ -10,7 +10,7 @@ classdef ForceResponse
     end
     
     methods
-        function obj = ForceResponse(valid_indices, varargin)
+        function obj = BlamForceResponse(valid_indices, varargin)
             if ~exist('valid_indices', 'var')
                 error('Need valid indices!');
             end

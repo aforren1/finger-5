@@ -1,4 +1,4 @@
-classdef KeyFeedback
+classdef BlamKeyFeedback
     properties
         num_boxes;
         outline_colour;
@@ -14,7 +14,7 @@ classdef KeyFeedback
     end
     
     methods
-        function obj = KeyFeedback(dims_x, dims_y, varargin)
+        function obj = BlamKeyFeedback(dims_x, dims_y, varargin)
         
             opts = struct('num_boxes', 4,...
                           'reversed', false,...
