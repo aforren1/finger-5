@@ -8,16 +8,15 @@ classdef TimedResponse < Experiment
 
     methods
 	    function consts = Constants
-		    consts.timing_tolerance = 0.075;
-			consts.possible_keys =  {{'a','w','e','f','v','b','h','u','i','l'}};
-			consts.force_min = 1;
-			consts.force_max = 5;
-			consts.sampling_freq = 200;
-			consts.reversed = false;
-			consts.skip_tests = true;
-			consts.scale = 0.22;
+            consts = struct('timing_tolerance', 0.075, ...
+                            'possible_keys', {{'a','w','e','f','v','b','h','u','i','l'}}, ...
+                            'force_min', 1, ...
+                            'force_max', 5, ...
+                            'sampling_freq', 200, ...
+                            'skip_tests', true, ...
+                            'scale', 0.22);
 		end
-		
+
         function o = TimedResponse(tgt)
             o@Experiment;
             o.valid_states = {'idle',...
@@ -32,8 +31,8 @@ classdef TimedResponse < Experiment
 
             % audio
             o.audio = BlamAudio;
-            o.audio.FillAudio(['misc/sounds/', 'beepTrainFast.wav'], 1, 0);
-            o.audio.FillAudio(['misc/sounds/', 'smw_coin.wav'], 2, 0);
+            o.audio.FillAudio(['misc/sounds/', 'beepTrainFast.wav'], 1, 'stereo');
+            o.audio.FillAudio(['misc/sounds/', 'smw_coin.wav'], 2, 'stereo');
 
             %images
             subdir = ifelse(tgt.image_type(1), 'shapes/', 'hands/');
@@ -90,7 +89,7 @@ classdef TimedResponse < Experiment
                     error('Unknown state');
             end
         end
-		
+
 		% allocate arrays for summary data and complete data for the entire block
 	    function [summary_data, full_data] = AllocateData(o, tgt)
 	        % do we want a struct (for the names) or a matrix (and keep track of columns)?
