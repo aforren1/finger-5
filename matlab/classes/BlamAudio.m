@@ -26,7 +26,7 @@ classdef BlamAudio
             % open in master mode with low latency (other audio devs may fail)
             obj.pamaster = PsychPortAudio('Open', [], 9, 2, 44100, 2);
             PsychPortAudio('Start', obj.pamaster, 0, 0, 1);
-            %obj.sound_handle = zeros(1, 1000);
+            obj.sound_handle = zeros(1, 1000);
         end % end constructor
 
         function FillAudio(obj, file_or_matrix, aud_index, mono_stereo)

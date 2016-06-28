@@ -1,5 +1,5 @@
 
-function out_data = main2(tgt_name)
+function long_data = main2(tgt_name)
 
     try
         % get important functions into memory
@@ -24,9 +24,7 @@ function out_data = main2(tgt_name)
         end
 
         while State(exp) ~= 'endblock'
-            long_data = exp.UpdateInput(exp.resp_device);
-
-            [exp, out_data] = exp.StateMachine(tgt, out_data);
+            [exp, long_data, summary_data] = exp.StateMachine(tgt, long_data, summary_data);
             % lock to the refresh rate of the screen
             time_screen = FlipScreen(exp.screen, time_screen + 0.7 * Ifi(exp.screen));
         end
