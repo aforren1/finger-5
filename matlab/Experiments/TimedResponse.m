@@ -72,7 +72,7 @@ classdef TimedResponse < Experiment
         end
 
         % delegate
-        function out_data = StateMachine(o, tgt, out_data)
+        function [long_data, summary_data] = StateMachine(o, tgt, long_data, summary_data)
             switch State(o.current_state)
                 case 'idle' % between/before trials
 

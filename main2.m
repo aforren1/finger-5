@@ -24,7 +24,7 @@ function long_data = main2(tgt_name)
         end
 
         while State(exp) ~= 'endblock'
-            [exp, long_data, summary_data] = exp.StateMachine(tgt, long_data, summary_data);
+            [long_data, summary_data] = exp.StateMachine(tgt, long_data, summary_data);
             % lock to the refresh rate of the screen
             time_screen = FlipScreen(exp.screen, time_screen + 0.7 * Ifi(exp.screen));
         end
