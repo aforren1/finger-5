@@ -1,4 +1,4 @@
-classdef BlamAudio < superhandle
+classdef BlamAudio
 
     properties
         pamaster;

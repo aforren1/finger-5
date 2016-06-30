@@ -1,4 +1,4 @@
-classdef BlamScreen
+classdef BlamScreen < superhandle
     properties
         black;
         white;
@@ -85,10 +85,6 @@ classdef BlamScreen
 
         function FillScreen(obj, colour)
             Screen('FillRect', obj.window, obj.(colour));
-        end
-
-        function ifi = Ifi(obj)
-            ifi = screen.ifi;
         end
 
         function out_time = FlipScreen(screen, flip_time)
