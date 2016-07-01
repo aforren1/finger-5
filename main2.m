@@ -23,10 +23,13 @@ function long_data = main2(tgt_name)
             TeensySetupScript;
         end
 
-        while State(exp) ~= 'endblock'
+        [long_data, summary_data] = o.AllocateData(tgt);
+        ifi = get(exp.screen, 'ifi');
+
+        while get(exp, 'state') ~= 'endblock'
             [long_data, summary_data] = exp.StateMachine(tgt, long_data, summary_data);
             % lock to the refresh rate of the screen
-            time_screen = FlipScreen(exp.screen, time_screen + 0.7 * Ifi(exp.screen));
+            time_screen = FlipScreen(exp.screen, time_screen + 0.7 * ifi);
         end
 
     catch err

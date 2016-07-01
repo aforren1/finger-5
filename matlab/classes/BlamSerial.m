@@ -1,5 +1,5 @@
 % wrapper for octave/matlab serial ports
-classdef BlamSerial
+classdef BlamSerial < SuperHandle
     properties
         serial_obj;
         isoctave;

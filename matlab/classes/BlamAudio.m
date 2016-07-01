@@ -1,4 +1,4 @@
-classdef BlamAudio
+classdef BlamAudio < handle
 
     properties
         pamaster;
