@@ -34,6 +34,7 @@ function long_data = main2(tgt_name)
 
     catch err
         % clean up!
+        PsychPurge; % general-purpose cleanup/saving files
         rethrow(err);
     end
 

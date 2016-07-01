@@ -4,7 +4,7 @@
 Priority(0);
 ShowCursor;
 
-try screen = CloseScreen(screen);
+try CloseScreen(screen);
 catch
     warning('Screen not open');
 end
@@ -14,18 +14,19 @@ catch
     warning('No active response device');
 end
 
-try PsychPortAudio('Close');
+try CloseAudio(aud);
 catch
     warning('No active audio device');
 end
 
 try
     if IsOctave
-        save('-mat7-binary', filename, 'output');
+        save('-mat7-binary', [filename, '_long'], 'long_data');
+        save('-mat7-binary', [filename, '_summary'], 'summary_data');
     else
-        save(filename, 'output', '-v7');
+        save([filename, '_long'], 'long_data', '-v7');
+        save([filename, '_summary'], 'summary_data', '-v7');
     end
 catch
     warning('No data available!');
 end
-

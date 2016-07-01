@@ -1,7 +1,7 @@
 classdef ImageFeedback
     properties
         scale;
-        img_path;
+        img_path = 'misc/images/other/wrong.png';
         ptb_image;
     end
 
@@ -18,7 +18,6 @@ classdef ImageFeedback
             opts = CheckInputs(opts, varargin{:});
 
             obj.scale = opts.scale;
-            obj.img_path = 'misc/images/other/wrong.png';
             tempimg = imread(obj.img_path);
             tempimg = imresize(tempimg, [obj.scale*scrn_dims_x NaN]);
             obj.ptb_image = Screen('MakeTexture', scrn_handle, tempimg);
