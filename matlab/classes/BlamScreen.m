@@ -1,11 +1,5 @@
-classdef BlamScreen < superhandle
+classdef BlamScreen < SuperHandle & Rainbow
     properties
-        black;
-        white;
-        gray;
-        red;
-        green;
-        blue;
         reversed; % reversed == true == white background
         background_colour;
         text_colour;
@@ -23,23 +17,10 @@ classdef BlamScreen < superhandle
             AssertOpenGL;
             screens = Screen('Screens');
             scrn_num = max(screens);
-            opts = struct('black', BlackIndex(scrn_num),...
-                          'white', WhiteIndex(scrn_num),...
-                          'gray', [190, 190, 190],...
-                          'red', [255, 30, 63],...
-                          'green', [97, 255, 77],...
-                          'blue', [85, 98, 255],...
-                          'reversed', false,...
+            opts = struct('reversed', false,...
                           'big_screen', false,...
                           'skip_tests', true);
             opts = CheckInputs(opts, varargin{:});
-
-            obj.black = opts.black;
-            obj.white = opts.white;
-            obj.gray = opts.gray;
-            obj.red = opts.red;
-            obj.green = opts.green;
-            obj.blue = opts.blue;
             obj.reversed = opts.reversed;
 
             if opts.skip_tests
@@ -48,11 +29,11 @@ classdef BlamScreen < superhandle
             end
 
             if opts.reversed
-                obj.background_colour = opts.white;
-                obj.text_colour = opts.black;
+                obj.background_colour = obj.white;
+                obj.text_colour = obj.black;
             else
-                obj.background_colour = opts.black;
-                obj.text_colour = opts.white;
+                obj.background_colour = obj.black;
+                obj.text_colour = obj.white;
             end
 
             if opts.big_screen % big screen
@@ -73,11 +54,10 @@ classdef BlamScreen < superhandle
 
         end % end BlamScreen
 
-        function obj = CloseScreen(obj)
-        % Closes the BlamScreen object
+        function CloseScreen(obj)
             sca;
-            obj = [];
-        end % end CloseScreen
+            delete(obj); % only matlab obeys this!
+        end
 
         function WipeScreen(obj)
             Screen('FillRect', obj.window, obj.background_colour);

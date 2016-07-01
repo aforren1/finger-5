@@ -1,4 +1,5 @@
-classdef superhandle < handle
+% provides (slow?) generic getters and setters
+classdef SuperHandle < handle
 
     methods
         function value = get(self, property)
