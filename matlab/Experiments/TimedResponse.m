@@ -106,8 +106,9 @@ classdef TimedResponse < Experiment
 
             % key_states is the 1xn array representing the current state of the keys
             % (0 or 1 for keyboard, some force level for transducers)
-            % need to do post-block pruning of this one
-            full_data = zeros(100000, 18) - 1;
+            % need to do post-block pruning of this one (it's big enough for
+            % 250hz sampling for 30 mins) (~64 mb)
+            full_data = zeros(450000, 18) - 1;
 
 	    end
     end % end methods
