@@ -91,8 +91,24 @@ classdef TimedResponse < Experiment
         end
 
 		% allocate arrays for summary data and complete data for the entire block
-	    function [summary_data, full_data] = AllocateData(o, tgt)
+        % id is subject id
+	    function [summary_data, full_data] = AllocateData(o, tgt, id)
 	        % do we want a struct (for the names) or a matrix (and keep track of columns)?
+            % names: id, day,block,trial,easy,swapped,image_type,
+            % image_time,finger_index,image_index,swap_index_1,swap_index_2
+            % press1, press1_time, press2, press2_time
+            summary_data = zeros(length(tgt.day), 16) - 1;
+
+            % updated each loop.
+            % names: id, day, block, trial, easy, swapped, image_type, image_time,
+            % finger_index, image_index, swap_index_1, swap_index_2,
+            % current_state, press_event, press_index, press_time, key_states,image_on
+
+            % key_states is the 1xn array representing the current state of the keys
+            % (0 or 1 for keyboard, some force level for transducers)
+            % need to do post-block pruning of this one
+            full_data = zeros(100000, 18) - 1;
+
 	    end
     end % end methods
 end % end timed response

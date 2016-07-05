@@ -23,7 +23,7 @@ function long_data = main2(tgt_name)
             TeensySetupScript;
         end
 
-        [long_data, summary_data] = o.AllocateData(tgt);
+        [long_data, summary_data] = o.AllocateData(tgt, ui.subject_id);
         ifi = get(exp.screen, 'ifi');
 
         while get(exp, 'state') ~= 'endblock'

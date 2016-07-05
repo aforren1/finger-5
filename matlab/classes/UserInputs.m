@@ -17,7 +17,7 @@ classdef UserInputs
             out.block = input('Which block is it (numeric, ie. 1 through 10)? ');
             % check for valid experiment types?
             out.exp_type = input('Expected experiment type? tr... (no quotes): ', 's');
-            out.use_serial = false;%input('Use serial port? true or false. ');
+            out.use_serial = false; %input('Use serial port? true or false. ');
             out.big_screen = false;
             out.keyboard_or_force = true;
             out.tgt_name = GuessTgt(out);
