@@ -23,7 +23,7 @@ function long_data = main2(tgt_name)
             TeensySetupScript;
         end
 
-        [long_data, summary_data] = exp.AllocateData(tgt, ui.subject_id);
+        [long_data, nested_data, summary_data] = exp.AllocateData(tgt, ui.subject_id);
         ifi = get(exp.screen, 'ifi');
         time_screen = GetSecs;
         flip_counter = 1;
