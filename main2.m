@@ -25,18 +25,11 @@ function long_data = main2(tgt_name)
 
         [long_data, nested_data, summary_data] = exp.AllocateData(tgt, ui.subject_id);
         ifi = get(exp.screen, 'ifi');
-        time_screen = GetSecs;
-        flip_counter = 1;
+        time_screen = 0;
 
         while get(exp, 'state') ~= 'endblock'
             [long_data, summary_data] = exp.StateMachine(tgt, long_data, summary_data);
             % lock to the refresh rate of the screen
-            if flip_counter == 1 % flip asap on first frame
-                time_screen = 0;
-                flip_counter = 0;
-            else
-                time_screen = time_screen + 0.7 * ifi;
-            end
             time_screen = FlipScreen(exp.screen, time_screen);
         end
 
