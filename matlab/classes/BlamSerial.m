@@ -44,20 +44,19 @@ classdef BlamSerial < SuperHandle
 
         function data = Read(o, async)
             [data, timestamp] = IOPort('Read', o.port, async, o.max_line);
-            data = [timestamp, sscanf(deblank(char(data)), '%d')'];
+            data = [timestamp, sscanf(char(data), '%d')'];
         end
 
-        %TODO: add args to allow variable # of zeros? Better if only reading at
-        % the end of a block/trial...
-        function data = ReadLines(o)
+        function data = ReadLines(o, secs)
             stop_time = GetSecs;
-            data = zeros(200, 10);
+            % allocate data based on expected runtime, plus fudge factor
+            data = zeros(secs * o.sampling_freq + 20, 10);
             counter = 1;
             timestamp = 0;
             while timestamp < stop_time
                 [temp_dat, timestamp] = IOPort('Read', o.port, 0, o.max_line);
                 data(counter, 1) = timestamp;
-                temp_dat = sscanf(deblank(char(temp_dat)), '%d')';
+                temp_dat = sscanf(char(temp_dat), '%d')';
                 data(counter, 2:(size(temp_dat, 2) + 1)) = temp_dat;
                 counter = counter + 1;
             end
