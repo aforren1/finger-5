@@ -7,7 +7,7 @@ else
 end
 setenv('PLATFORMIO_SRC_DIR', src_path);
 system('platformio run --target clean -v');
-working_serial = ~system('platformio run -e teensy31 -v');
+%working_serial = ~system('platformio run -e teensy31 -v');
 working_serial = ~system('platformio run -e teensy31 --target upload -v');
 if working_serial
     % set up serial connection here: how to detect the right one??

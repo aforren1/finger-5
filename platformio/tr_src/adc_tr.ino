@@ -65,11 +65,11 @@ void loop() {
   //Serial.print("s");
   //Serial.print("\t");
   Serial.print(current_time);
-  Serial.print("\t");
+  Serial.print(" ");
 
   for (ii = 0; ii < array_size; ii++) {
     Serial.print(value_array[ii]);
-    Serial.print("\t");
+    Serial.print(" ");
   }
   //Serial.print(current_time);
   Serial.print("\n");
