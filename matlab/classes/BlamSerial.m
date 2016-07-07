@@ -28,8 +28,8 @@ classdef BlamSerial < SuperHandle
             obj.sampling_freq = opts.sampling_freq;
             obj.max_line = opts.max_line;
 
-            if isempty(opts.port)
-                opts.port = FindSerialPort([], 1);
+            if isempty(obj.port)
+                obj.port = FindSerialPort([], 1);
             end
 
             % two minutes' worth of buffer
@@ -37,7 +37,7 @@ classdef BlamSerial < SuperHandle
 
             port_settings = sprintf('BaudRate=%i InputBufferSize=%i Terminator=%i ReceiveTimeout=%f',...
                                      obj.baud, obj.read_buffer, obj.terminator, obj.receive_timeout);
-            async_settings = sprintf('BlockingBackgroundRead=1 ReadFilterFlags=2 StartBackgroundRead=%i', obj.max_line);
+            async_settings = sprintf('BlockingBackgroundRead=1 ReadFilterFlags=4 StartBackgroundRead=%i', obj.max_line);
             obj.port = IOPort('OpenSerialPort', obj.port, port_settings);
             IOPort('ConfigureSerialPort', obj.port, async_settings);
 
@@ -45,25 +45,25 @@ classdef BlamSerial < SuperHandle
 
         function data = Read(o, async)
             [data, timestamp] = IOPort('Read', o.port, async, o.max_line);
-            data = (deblank(char(data)));
-            %data = [timestamp, data];
+            data = [timestamp, str2num(deblank(char(data)))];
         end
 
+        %TODO: add args to allow variable # of zeros
         function data = ReadLines(o)
             stop_time = GetSecs;
-            data = zeros(5000, 10);
+            data = zeros(200, 10);
             counter = 1;
             timestamp = 0;
             while timestamp < stop_time
                 [temp_dat, timestamp] = IOPort('Read', o.port, 0, o.max_line);
                 data(counter, 1) = timestamp;
-                data(counter, 2:(size(temp_dat, 2) + 1)) = str2num(deblank(char(temp_dat)));
+                temp_dat = str2num(deblank(char(temp_dat)));
+                data(counter, 2:(size(temp_dat, 2) + 1)) = temp_dat;
+                counter = counter + 1;
             end
             % prune missing data
             data(all(data == 0, 2), :) = [];
             data(:, all(data == 0, 1)) = [];
-            counter = counter + 1;
-
         end
 
         function Close(o)
