@@ -1,91 +1,77 @@
-% wrapper for octave/matlab serial ports
+% Wrapper for SerialIO from PTB
 classdef BlamSerial < SuperHandle
+
     properties
-        serial_obj;
-        isoctave;
-        baud_rate;
         port;
+        baud = 9600;
+        terminator = 10; % \n
+        receive_timeout = 0.1;
+        sampling_freq = 400;
+        max_line = 30; % bytes (1 byte per ascii char?)
+        read_buffer;
     end
 
     methods
-        function obj = BlamSerial(port, varargin)
-            opts = struct('baud_rate', 9600);
-            obj.isoctave = IsOctave;
-            obj.baud_rate = opts.baud_rate;
-            obj.port = port;
 
-            if isoctave % on octave
-                try
-                    pkg load instrument-control
-                catch ME
-                    error('Install instrument-control first!');
-                end
-                obj.serial_obj = serial(port, opts.baud_rate);
-                set(obj.serial_obj, 'timeout', 0.01); % in tenths of a sec??
+        function obj = BlamSerial(varargin)
+            opts = struct('port', '', ...
+                          'baud', 9600, ...
+                          'terminator', 10, ...
+                          'receive_timeout', 1, ...
+                          'sampling_freq', 400, ...
+                          'max_line', 30);
+            opts = CheckInputs(opts, varargin{:});
+            obj.port = opts.port;
+            obj.baud = opts.baud;
+            obj.terminator = opts.terminator;
+            obj.receive_timeout = opts.receive_timeout;
+            obj.sampling_freq = opts.sampling_freq;
+            obj.max_line = opts.max_line;
 
-            else % on matlab
-                if ~usejava('jvm') % not using the jvm
-                    error(['jvm required for matlab serial port.\n',...
-                           'Run matlab without -nojvm flag']);
-                end
-                obj.serial_obj = serial(port, 'BaudRate', opts.baud_rate);
-                set(obj.serial_obj, 'Timeout', 0.001); % 1 ms timeout
-                fopen(obj.serial_obj);
-            end
-        end
-
-        function out = ReadSerial(obj)
-            % both return single line now, how to read until
-            % no new line?
-            if obj.isoctave
-                out = ReadLine(obj);
-            else
-                out = fscanf(obj.serial_obj);
-            end
-            out = str2num(out); % limits to numbers only, but removes
-                                % repeated function calls
-        end
-
-        function out = ReadLine(obj)
-            not_done = true;
-            ii = 1;
-            int_array = uint8(1);
-
-            while not_done
-                val = srl_read(obj.serial_obj, 1);
-                if val == 10 % newline
-                    not_done = false;
-                end
-                int_array(ii) = val;
-                ii = ii + 1;
-            end
-            out = char(int_array);
-        end
-
-        function WriteSerial(obj, to_write)
-            if ~ischar(to_write)
-                error('Do not write non-strings (for now)');
+            if isempty(opts.port)
+                opts.port = FindSerialPort([], 1);
             end
 
-            if obj.isoctave
-                srl_write(obj.serial_obj, to_write);
-            else
-                fprintf(obj.serial_obj, to_write);
-            end
-        end
+            % two minutes' worth of buffer
+            obj.read_buffer = opts.max_line * opts.sampling_freq * 120;
 
-        function FlushSerial(obj)
-            if obj.isoctave
-                srl_flush(obj.serial_obj);
-            else
-                flushinput(obj.serial_obj);
-            end
+            port_settings = sprintf('BaudRate=%i InputBufferSize=%i Terminator=%i ReceiveTimeout=%f',...
+                                     obj.baud, obj.read_buffer, obj.terminator, obj.receive_timeout);
+            async_settings = sprintf('BlockingBackgroundRead=1 ReadFilterFlags=2 StartBackgroundRead=%i', obj.max_line);
+            obj.port = IOPort('OpenSerialPort', obj.port, port_settings);
+            IOPort('ConfigureSerialPort', obj.port, async_settings);
 
         end
 
-        function CloseSerial(obj)
-            fclose(obj.serial_obj);
+        function data = Read(o, async)
+            [data, timestamp] = IOPort('Read', o.port, async, o.max_line);
+            data = (deblank(char(data)));
+            %data = [timestamp, data];
         end
-    end % end methods
 
-end % end classdef
+        function data = ReadLines(o)
+            stop_time = GetSecs;
+            data = zeros(5000, 10);
+            counter = 1;
+            timestamp = 0;
+            while timestamp < stop_time
+                [temp_dat, timestamp] = IOPort('Read', o.port, 0, o.max_line);
+                data(counter, 1) = timestamp;
+                data(counter, 2:(size(temp_dat, 2) + 1)) = str2num(deblank(char(temp_dat)));
+            end
+            % prune missing data
+            data(all(data == 0, 2), :) = [];
+            data(:, all(data == 0, 1)) = [];
+            counter = counter + 1;
+
+        end
+
+        function Close(o)
+            IOPort('ConfigureSerialPort', o.port, 'StopBackgroundRead');
+            IOPort('Close', o.port);
+            delete(o);
+        end
+    end
+
+
+end
