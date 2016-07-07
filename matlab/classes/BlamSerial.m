@@ -28,6 +28,7 @@ classdef BlamSerial < handle
             obj.max_line = opts.max_line;
 
             if isempty(obj.port)
+                % take a guess at the serial port
                 obj.port = FindSerialPort([], 1);
             end
 
