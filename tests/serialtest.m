@@ -7,7 +7,7 @@ tic
 data = srl.ReadLines(0.01);
 toc
 WaitSecs(0.016);
-
+srl.Purge;
 tic
 data = srl.ReadLines(0.02);
 toc
