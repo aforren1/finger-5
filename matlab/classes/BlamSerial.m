@@ -1,5 +1,5 @@
 % Wrapper for SerialIO from PTB
-classdef BlamSerial < SuperHandle
+classdef BlamSerial < handle
 
     properties
         port;
@@ -42,8 +42,11 @@ classdef BlamSerial < SuperHandle
 
         end
 
-        function data = Read(o, async)
-            [data, timestamp] = IOPort('Read', o.port, async, o.max_line);
+        function data = ReadLine(o, blocking)
+            if ~exist('blocking')
+                blocking = 0;
+            end
+            [data, timestamp] = IOPort('Read', o.port, blocking, o.max_line);
             data = [timestamp, sscanf(char(data), '%d')'];
         end
 
@@ -63,6 +66,16 @@ classdef BlamSerial < SuperHandle
             % prune missing data
             data(all(data == 0, 2), :) = [];
             data(:, all(data == 0, 1)) = [];
+        end
+
+        % flush data for writeout (write only??)
+        function Flush(o)
+            IOPort('Flush', o.port);
+        end
+
+        % flush write and read data
+        function Purge(o)
+            IOPort('Purge', o.port);
         end
 
         function Close(o)
