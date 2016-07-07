@@ -12,12 +12,11 @@ classdef BlamSerial < SuperHandle
     end
 
     methods
-
         function obj = BlamSerial(varargin)
             opts = struct('port', '', ...
                           'baud', 9600, ...
                           'terminator', 10, ...
-                          'receive_timeout', 1, ...
+                          'receive_timeout', 0.1, ...
                           'sampling_freq', 400, ...
                           'max_line', 30);
             opts = CheckInputs(opts, varargin{:});
@@ -48,7 +47,8 @@ classdef BlamSerial < SuperHandle
             data = [timestamp, str2num(deblank(char(data)))];
         end
 
-        %TODO: add args to allow variable # of zeros
+        %TODO: add args to allow variable # of zeros? Better if only reading at
+        % the end of a block/trial...
         function data = ReadLines(o)
             stop_time = GetSecs;
             data = zeros(200, 10);
