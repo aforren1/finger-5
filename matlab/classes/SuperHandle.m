@@ -1,4 +1,3 @@
-% provides (slow?) generic getters and setters
 classdef SuperHandle < handle
 
     methods
