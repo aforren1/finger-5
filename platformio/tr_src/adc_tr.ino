@@ -17,11 +17,7 @@ unsigned int value_array[array_size];
 unsigned int ii;
 
 elapsedMicros current_time;
-unsigned long current_time_copy;
 IntervalTimer timer_0;
-
-byte time_buf[4];
-byte val_buf[2];
 
 ADC *adc = new ADC();
 
@@ -60,26 +56,22 @@ void loop() {
   go_flag_copy = false;
   go_flag = false;
 
-  current_time_copy = current_time;
+
   for (ii = 0; ii < array_size; ii++) {
     value_array[ii] = adc->analogRead(channel_array[ii]);
   }
 
-  time_buf[0] = current_time_copy & 255;
-  time_buf[1] = (current_time_copy >> 8) & 255;
-  time_buf[2] = (current_time_copy >> 16) & 255;
-  time_buf[3] = (current_time_copy >> 24) & 255;
-
-  Serial.write(time_buf, sizeof(time_buf));
-  Serial.write(" ");
+  // if s is missing, incomplete line!
+  //Serial.print("s");
+  //Serial.print("\t");
+  Serial.print(current_time);
+  Serial.print(" ");
 
   for (ii = 0; ii < array_size; ii++) {
-    val_buf[0] = value_array[ii] & 255;
-    val_buf[1] = (value_array[ii] >> 8) & 255;
-    Serial.write(val_buf, sizeof(val_buf));
-    Serial.write(" ");
+    Serial.print(value_array[ii]);
+    Serial.print(" ");
   }
   //Serial.print(current_time);
-  Serial.write("\n");
+  Serial.print("\n");
 
 }
