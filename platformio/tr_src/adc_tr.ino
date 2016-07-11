@@ -1,6 +1,10 @@
 /*
 Prototypical arduino/teensy code.
-TODO: prepend zeros to outputs to make lines identical?
+Adjust channel_array and period_0 to allow for multiple channels/
+different sampling frequencies, respectively.
+
+channel_array can include A0 - A20 (though look at the Teensy diagram first!)
+period_0 is in microseconds.
 */
 
 #include "ADC.h"
@@ -17,6 +21,7 @@ unsigned int value_array[array_size];
 unsigned int ii;
 
 elapsedMicros current_time;
+unsigned long current_time_copy;
 IntervalTimer timer_0;
 
 ADC *adc = new ADC();
@@ -56,22 +61,19 @@ void loop() {
   go_flag_copy = false;
   go_flag = false;
 
-
+  current_time_copy = current_time;
   for (ii = 0; ii < array_size; ii++) {
     value_array[ii] = adc->analogRead(channel_array[ii]);
   }
 
-  // if s is missing, incomplete line!
-  //Serial.print("s");
-  //Serial.print("\t");
-  Serial.print(current_time);
+  Serial.print(current_time_copy);
   Serial.print(" ");
 
   for (ii = 0; ii < array_size; ii++) {
     Serial.print(value_array[ii]);
     Serial.print(" ");
   }
-  //Serial.print(current_time);
+
   Serial.print("\n");
 
 }
