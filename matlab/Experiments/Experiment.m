@@ -14,9 +14,6 @@ classdef Experiment
         function output = State(obj)
             output = obj.current_state;
         end
-        function output = ValidStates(obj)
-            output = obj.valid_states;
-        end
     end
 
     methods (Static)

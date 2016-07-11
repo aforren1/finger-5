@@ -73,18 +73,22 @@ classdef TimedResponse < Experiment
 
         % delegate
         function [long_data, summary_data] = StateMachine(o, tgt, long_data, summary_data)
-            switch State(o.current_state)
+            % check inputs
+            switch o.current_state
                 case 'idle' % between/before trials
+
+                case 'pretrial'
 
                 case 'intrial' % during trial
 
                 case 'posttrial' % after trial cleanup
 
-                if trialnum >= max(tgt.trial)
-                    o.current_state = 'endblock';
+                    if trialnum >= max(tgt.trial)
+                        o.current_state = 'endblock';
 
-                end
+                    end
                 case 'endblock' % after block cleanup
+
                 otherwise
                     error('Unknown state');
             end

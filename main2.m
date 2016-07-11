@@ -27,10 +27,10 @@ function long_data = main2(tgt_name)
         ifi = get(exp.screen, 'ifi');
         time_screen = 0;
 
-        while get(exp, 'state') ~= 'endblock'
+        while exp.current_state ~= 'endblock'
             [long_data, summary_data] = exp.StateMachine(tgt, long_data, summary_data);
             % lock to the refresh rate of the screen
-            time_screen = FlipScreen(exp.screen, time_screen);
+            time_screen = exp.screen.FlipScreen(time_screen + 0.7 * ifi);
         end
 
     catch err
